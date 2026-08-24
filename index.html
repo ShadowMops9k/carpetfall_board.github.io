@@ -123,8 +123,9 @@ label.lbl{display:block;font-family:'Oxanium',sans-serif;font-size:11px;font-wei
 .ava{
   width:26px;height:26px;border-radius:3px;display:grid;place-items:center;
   font-family:'Oxanium',sans-serif;font-weight:800;font-size:12px;color:var(--ink);
-  background:var(--ph);
+  background:var(--ph);background-size:cover;background-position:center;flex:0 0 auto;
 }
+.ava.big{width:44px;height:44px;font-size:16px;border-radius:5px}
 .user .nm{font-family:'Oxanium',sans-serif;font-weight:600;font-size:13px;color:var(--ph-hi);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ---------- frame / board ---------- */
@@ -218,10 +219,27 @@ label.lbl{display:block;font-family:'Oxanium',sans-serif;font-size:11px;font-wei
   font-family:'Oxanium',sans-serif;font-weight:600;text-transform:uppercase;flex-wrap:wrap}
 
 .base .count{
-  position:absolute;top:3px;right:5px;font-size:10px;opacity:.7;font-variant-numeric:tabular-nums;
+  position:absolute;top:3px;right:24px;font-size:10px;opacity:.7;font-variant-numeric:tabular-nums;
   font-family:'Oxanium',sans-serif;font-weight:700;
 }
 .base .fold{position:absolute;top:3px;left:5px;font-size:10px;opacity:.7}
+.base .coledit{
+  position:absolute;top:1px;right:2px;font-size:12px;opacity:.55;padding:3px 5px;
+  background:transparent;border:0;color:inherit;cursor:pointer;line-height:1;border-radius:3px;
+}
+.base .coledit:hover{opacity:1;background:rgba(0,0,0,.18)}
+
+/* ---------- проверка тасков ---------- */
+.card .verify{
+  position:absolute;bottom:3px;right:3px;width:16px;height:16px;border-radius:3px;
+  display:grid;place-items:center;font-size:10px;line-height:1;
+  border:1px solid color-mix(in srgb, var(--c) 55%, transparent);
+  background:rgba(3,19,10,.35);cursor:pointer;
+}
+.card .verify.done{background:var(--ph);border-color:var(--ph);color:var(--ink);box-shadow:0 0 8px rgba(58,240,128,.6)}
+.card .verify.ro{cursor:default}
+.card.tile.verified{box-shadow:0 0 0 1px var(--ph), 0 0 12px rgba(58,240,128,.35)}
+.vbadge{font-size:10px;opacity:.85}
 .addcard{
   border:1px dashed var(--line);background:transparent;color:var(--muted);
   border-radius:var(--r);padding:5px;font-size:12px;cursor:pointer;
@@ -292,7 +310,7 @@ label.lbl{display:block;font-family:'Oxanium',sans-serif;font-size:11px;font-wei
 .list{display:flex;flex-direction:column;gap:7px}
 .listrow{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:7px 9px}
 .listrow input[type=color]{width:34px;height:28px;padding:0;border:1px solid var(--line);background:transparent;border-radius:3px;cursor:pointer}
-.listrow .field{flex:1}
+.listrow .field{flex:1;min-width:110px}
 .listrow .grab{color:var(--muted);font-size:12px;cursor:grab}
 
 .note{font-size:12px;color:var(--muted);line-height:1.5}
@@ -356,6 +374,24 @@ label.lbl{display:block;font-family:'Oxanium',sans-serif;font-size:11px;font-wei
 }
 .hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
 .hint code{color:var(--ph-hi);font-size:11px}
+
+.pwmeter{margin:-4px 0 14px;min-height:28px}
+.pwbar{height:4px;border-radius:3px;background:rgba(58,240,128,.08);overflow:hidden;margin-bottom:5px}
+.pwbar i{display:block;height:100%;transition:width .15s}
+.pwlabel{font-family:'Oxanium',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.pwwarn{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.pinrow{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.pinrow .field{flex:0 1 160px;text-align:center;letter-spacing:.35em;font-size:18px}
+.vaultbox{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin:10px 0}
+
+.checkrow{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--txt);cursor:pointer;user-select:none}
+.checkrow input{width:15px;height:15px;accent-color:var(--ph);cursor:pointer}
+.listrow.mrow{align-items:center;flex-wrap:wrap;row-gap:8px}
+.listrow .avaupload{position:relative;flex:0 0 auto}
+.listrow .avaupload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:44px}
+.mchk{display:flex;align-items:center;gap:5px;flex:0 0 auto;font-size:10px;color:var(--muted);
+  font-family:'Oxanium',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.mchk input{width:14px;height:14px;accent-color:var(--ph);cursor:pointer}
 </style>
 </head>
 <body>
@@ -387,6 +423,34 @@ function initials(n) {
   var p = n.split(/[\s_\-.]+/).filter(Boolean);
   return ((p[0] || "?")[0] + (p[1] ? p[1][0] : "")).toUpperCase();
 }
+function avaHTML(m, cls) {
+  var color = (m && m.color) || "#3af080";
+  var name = m ? m.name : "?";
+  var style = m && m.avatar
+    ? 'background-image:url(' + esc(m.avatar) + ')'
+    : "background:" + esc(color);
+  return '<span class="ava' + (cls ? " " + cls : "") + '" style="' + style + '">'
+    + (m && m.avatar ? "" : esc(initials(name))) + "</span>";
+}
+function resizeImageFile(file, size, cb) {
+  var img = new Image();
+  var reader = new FileReader();
+  reader.onload = function (ev) {
+    img.onload = function () {
+      var c = document.createElement("canvas");
+      c.width = size; c.height = size;
+      var ctx = c.getContext("2d");
+      var s = Math.min(img.width, img.height);
+      var sx = (img.width - s) / 2, sy = (img.height - s) / 2;
+      ctx.drawImage(img, sx, sy, s, s, 0, 0, size, size);
+      cb(c.toDataURL("image/jpeg", 0.82));
+    };
+    img.onerror = function () { cb(null); };
+    img.src = ev.target.result;
+  };
+  reader.onerror = function () { cb(null); };
+  reader.readAsDataURL(file);
+}
 
 /* ============================== где лежит файл ============================== */
 /* Определяем репозиторий по адресу страницы: username.github.io/repo/ */
@@ -408,7 +472,7 @@ function repoReady() { return !!(CFG.owner && CFG.repo); }
 var token = LS.get("token", "");
 
 /* ============================== шифрование ============================== */
-var ITER = 250000;
+var ITER = 600000; /* число итераций PBKDF2 для НОВЫХ шифрований; для старых файлов при расшифровке используется число из самого файла (box.it) */
 var enc = new TextEncoder(), dec = new TextDecoder();
 
 function b64(buf) {
@@ -421,18 +485,18 @@ function unb64(str) {
   for (var i = 0; i < s.length; i++) b[i] = s.charCodeAt(i);
   return b;
 }
-function deriveKey(pass, salt) {
+function deriveKey(pass, salt, iterations) {
   return crypto.subtle.importKey("raw", enc.encode(pass), "PBKDF2", false, ["deriveKey"])
     .then(function (base) {
       return crypto.subtle.deriveKey(
-        { name: "PBKDF2", salt: salt, iterations: ITER, hash: "SHA-256" },
+        { name: "PBKDF2", salt: salt, iterations: iterations || ITER, hash: "SHA-256" },
         base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
     });
 }
 function encryptBoard(obj, pass) {
   var salt = crypto.getRandomValues(new Uint8Array(16));
   var iv = crypto.getRandomValues(new Uint8Array(12));
-  return deriveKey(pass, salt).then(function (key) {
+  return deriveKey(pass, salt, ITER).then(function (key) {
     return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, enc.encode(JSON.stringify(obj)));
   }).then(function (ct) {
     return JSON.stringify({ v: 1, kdf: "PBKDF2-SHA256", it: ITER, salt: b64(salt), iv: b64(iv), ct: b64(ct) }, null, 1);
@@ -441,10 +505,131 @@ function encryptBoard(obj, pass) {
 function decryptBoard(text, pass) {
   var box = JSON.parse(text);
   if (!box || !box.ct) throw new Error("bad_file");
-  return deriveKey(pass, unb64(box.salt)).then(function (key) {
+  /* используем число итераций ИЗ ФАЙЛА — так старые файлы остаются читаемыми, даже когда ITER для новых записей меняется */
+  var iterations = box.it || 250000;
+  return deriveKey(pass, unb64(box.salt), iterations).then(function (key) {
     return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(box.iv) }, key, unb64(box.ct));
   }).then(function (buf) { return JSON.parse(dec.decode(buf)); });
 }
+
+/* ============================== оценка стойкости фразы ============================== */
+function passStrength(p) {
+  p = String(p || "");
+  if (!p) return { score: 0, label: "", warn: "" };
+  var classes = 0;
+  if (/[a-zа-яё]/i.test(p)) classes++;
+  if (/[A-ZА-ЯЁ]/.test(p)) classes++;
+  if (/[0-9]/.test(p)) classes++;
+  if (/[^a-zа-яё0-9]/i.test(p)) classes++;
+  var uniq = {}; for (var i = 0; i < p.length; i++) uniq[p[i]] = 1;
+  var uniqCount = Object.keys(uniq).length;
+  var bitsPerChar = classes <= 1 ? 2.7 : (classes === 2 ? 4 : (classes === 3 ? 4.7 : 5.5));
+  var entropy = p.length * bitsPerChar * Math.min(1, uniqCount / Math.max(4, p.length * 0.5));
+  var repeatPenalty = /(.)\1\1/.test(p) || /^(0123|1234|2345|3456|4567|5678|6789|abcd|qwer|йцук)/i.test(p);
+  var lowCommon = /^(пароль|password|123456|qwerty|admin|111111|команда)/i.test(p);
+  var score, label, warn = "";
+  if (p.length < 8 || lowCommon) { score = 1; label = "слабая"; warn = lowCommon ? "Это очень частая фраза — легко подбирается." : "Слишком короткая — минимум 8 символов, лучше 12+."; }
+  else if (entropy < 35 || repeatPenalty) { score = 2; label = "так себе"; warn = repeatPenalty ? "Заметны повторы/последовательности — усложните." : "Добавьте длины или разных типов символов."; }
+  else if (entropy < 55) { score = 3; label = "нормальная"; }
+  else { score = 4; label = "надёжная"; }
+  return { score: score, label: label, warn: warn };
+}
+function strengthHTML(p, inputId) {
+  var s = passStrength(p);
+  if (!p) return '<div class="pwmeter" data-pwmeter-for="' + inputId + '"></div>';
+  var pct = s.score * 25;
+  var colors = ["", "#c9524a", "#c98b3a", "#b0a45c", "#3ac96a"];
+  return '<div class="pwmeter" data-pwmeter-for="' + inputId + '">'
+    + '<div class="pwbar"><i style="width:' + pct + '%;background:' + colors[s.score] + '"></i></div>'
+    + '<span class="pwlabel" style="color:' + colors[s.score] + '">' + esc(s.label) + "</span>"
+    + (s.warn ? '<span class="pwwarn">' + esc(s.warn) + "</span>" : "")
+    + "</div>";
+}
+
+/* ============================== локальное хранение фразы (device vault) ==============================
+   Вместо кодовой фразы «как есть» в localStorage — фраза шифруется НЕЭКСПОРТИРУЕМЫМ ключом,
+   который лежит в IndexedDB именно этого браузера и не может быть прочитан или скопирован через JS.
+   Даже если кто-то скопирует localStorage (бэкап, синхронизация, скрипт-вытяжка) — без этого
+   локального ключа расшифровать фразу нельзя. Дополнительно всё это закрыто локальным PIN-кодом:
+   он не хранится нигде и нужен каждый раз, чтобы вскрыть хранилище на этом устройстве. */
+var Vault = (function () {
+  var DB = "cf_vault", STORE = "keys", KEYNAME = "device";
+  function supported() { return !!(window.indexedDB && window.crypto && crypto.subtle); }
+  function openDB() {
+    return new Promise(function (resolve, reject) {
+      var req = indexedDB.open(DB, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(STORE); };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+    });
+  }
+  function getKey(db) {
+    return new Promise(function (resolve, reject) {
+      var tx = db.transaction(STORE, "readonly");
+      var rq = tx.objectStore(STORE).get(KEYNAME);
+      rq.onsuccess = function () { resolve(rq.result || null); };
+      rq.onerror = function () { reject(rq.error); };
+    });
+  }
+  function putKey(db, key) {
+    return new Promise(function (resolve, reject) {
+      var tx = db.transaction(STORE, "readwrite");
+      tx.objectStore(STORE).put(key, KEYNAME);
+      tx.oncomplete = function () { resolve(); };
+      tx.onerror = function () { reject(tx.error); };
+    });
+  }
+  function deviceKey() {
+    return openDB().then(function (db) {
+      return getKey(db).then(function (k) {
+        if (k) return k;
+        return crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"])
+          .then(function (nk) { return putKey(db, nk).then(function () { return nk; }); });
+      });
+    });
+  }
+  function pinKey(pin, salt) {
+    return crypto.subtle.importKey("raw", enc.encode(String(pin)), "PBKDF2", false, ["deriveKey"])
+      .then(function (base) {
+        return crypto.subtle.deriveKey(
+          { name: "PBKDF2", salt: salt, iterations: 250000, hash: "SHA-256" },
+          base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+      });
+  }
+  /* сохранить фразу: сперва шифруем неэкспортируемым ключом устройства, затем — ключом от PIN */
+  function store(passphrase, pin) {
+    if (!supported()) return Promise.reject(new Error("unsupported"));
+    return deviceKey().then(function (dk) {
+      var iv1 = crypto.getRandomValues(new Uint8Array(12));
+      return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv1 }, dk, enc.encode(passphrase)).then(function (c1) {
+        var salt = crypto.getRandomValues(new Uint8Array(16));
+        var iv2 = crypto.getRandomValues(new Uint8Array(12));
+        return pinKey(pin, salt).then(function (pk) {
+          return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv2 }, pk, c1).then(function (c2) {
+            var blob = { v: 1, salt: b64(salt), iv1: b64(iv1), iv2: b64(iv2), ct: b64(c2) };
+            LS.set("vault", blob);
+          });
+        });
+      });
+    });
+  }
+  /* достать фразу: нужен и PIN, и этот конкретный браузер (ключ устройства) */
+  function unlock(pin) {
+    var blob = LS.get("vault", null);
+    if (!blob) return Promise.reject(new Error("empty"));
+    return openDB().then(getKey).then(function (dk) {
+      if (!dk) throw new Error("no_device_key");
+      return pinKey(pin, unb64(blob.salt)).then(function (pk) {
+        return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(blob.iv2) }, pk, unb64(blob.ct)).then(function (c1) {
+          return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(blob.iv1) }, dk, c1);
+        });
+      });
+    }).then(function (buf) { return dec.decode(buf); });
+  }
+  function has() { return !!LS.get("vault", null); }
+  function clear() { LS.del("vault"); indexedDB.deleteDatabase(DB); }
+  return { supported: supported, store: store, unlock: unlock, has: has, clear: clear };
+})();
 
 /* ============================== GitHub ============================== */
 function api(pathname, opts) {
@@ -618,14 +803,26 @@ function matches(t) {
 function cardHTML(t, colId) {
   var st = statusOf(t.status);
   var who = t.assignee ? memberOf(t.assignee) : null;
-  var kv = '<span class="kv"><span>' + esc(st.name) + "</span>" + (who ? '<span>· ' + esc(who.name) + "</span>" : "") + "</span>";
+  var meFull = me && me.id ? memberOf(me.id) : null;
+  var canVerify = !!(meFull && meFull.canVerify);
+  var verifier = t.verifiedBy ? memberOf(t.verifiedBy) : null;
+  var kv = '<span class="kv"><span>' + esc(st.name) + "</span>" + (who ? '<span>· ' + esc(who.name) + "</span>" : "")
+    + (t.verified ? '<span>· ✓ подтвердил' + (verifier ? " " + esc(verifier.name) : "") + "</span>" : "") + "</span>";
   var extra = '<div class="reveal"><div class="inner"><div class="body">'
     + (t.desc ? esc(t.desc) : '<span style="opacity:.6">без описания</span>') + kv + "</div></div></div>";
-  return '<div class="tile card' + (ui.opened[t.id] ? " open" : "") + '" style="--c:' + esc(st.color) + '" '
+  var verifyEl = "";
+  if (canVerify) {
+    verifyEl = '<button type="button" class="verify' + (t.verified ? " done" : "") + '" data-verify="' + esc(t.id)
+      + '" data-x="1" title="' + (t.verified ? "Подтверждено — снять отметку" : "Подтвердить (перепроверено)") + '">' + (t.verified ? "✓" : "") + "</button>";
+  } else if (t.verified) {
+    verifyEl = '<span class="verify done ro" data-x="1" title="Подтверждено' + (verifier ? " — " + esc(verifier.name) : "") + '">✓</span>';
+  }
+  return '<div class="tile card' + (ui.opened[t.id] ? " open" : "") + (t.verified ? " verified" : "") + '" style="--c:' + esc(st.color) + '" '
     + 'draggable="false" tabindex="0" role="button" data-task="' + esc(t.id) + '" data-col="' + esc(colId) + '" '
     + 'title="' + esc(t.title) + (t.desc ? " — " + esc(t.desc.slice(0, 120)) : "") + '">'
     + (t.desc ? '<span class="mark" data-x="1">▤</span>' : "")
     + (who ? '<span class="who" data-x="1">' + esc(initials(who.name)) + "</span>" : "")
+    + verifyEl
     + '<span class="ttl">' + esc(t.title) + "</span>" + extra + "</div>";
 }
 function colHTML(c) {
@@ -634,9 +831,10 @@ function colHTML(c) {
   var folded = !!ui.folded[c.id];
   var h = '<div class="col" data-colwrap="' + esc(c.id) + '">';
   h += '<div class="tile base" tabindex="0" role="button" style="--c:' + esc(st.color) + '" data-col="' + esc(c.id) + '" '
-    + 'title="' + esc(c.name) + ' — клик сворачивает, двойной клик открывает настройки раздела">'
+    + 'title="' + esc(c.name) + ' — клик сворачивает, ✎ или двойной клик открывает настройки раздела">'
     + '<span class="fold" data-x="1">' + (folded ? "▸" : "▾") + "</span>"
     + '<span class="count" data-x="1">' + vis.length + (vis.length !== c.tasks.length ? "/" + c.tasks.length : "") + "</span>"
+    + '<button type="button" class="coledit" data-x="1" data-editcol="' + esc(c.id) + '" title="Редактировать раздел">✎</button>'
     + "<span>" + esc(c.name) + "</span></div>";
   if (!folded) {
     h += '<button class="addcard" data-addcard="' + esc(c.id) + '">+ таск</button>';
@@ -669,7 +867,7 @@ function render() {
     + '<span id="saveind" class="save ' + sl[0] + '"><i class="dot"></i>' + esc(sl[1]) + "</span>"
     + '<button class="btn ghost" data-open="settings" title="Настройки">⚙</button>'
     + '<button class="user" data-open="me">'
-    + '<span class="ava" style="background:' + esc((me && me.color) || "#3af080") + '">' + esc(initials(me.name)) + "</span>"
+    + avaHTML(memberOf(me.id) || me)
     + '<span class="nm">' + esc(me.name) + "</span></button>"
     + "</div>";
 
@@ -738,15 +936,67 @@ function gatePassword(firstRun) {
     + (gateMsg ? '<div class="ok">' + esc(gateMsg) + "</div>" : "")
     + '<p class="note" style="margin-bottom:16px">'
     + (isNew
-      ? "Доски в репозитории ещё нет. Придумайте кодовую фразу — ею будет зашифровано содержимое."
+      ? "Доски в репозитории ещё нет. Придумайте кодовую фразу — ею будет зашифровано содержимое. Чем она длиннее и разнообразнее, тем надёжнее (лучше 12+ символов, без словарных слов)."
       : "Введите кодовую фразу команды<span class=\"caret\">&nbsp;</span>")
     + "</p>"
     + '<div class="pwrow"><input class="field" id="pw" type="password" placeholder="кодовая фраза" autocomplete="current-password">'
     + '<button class="btn primary" data-unlock="1" style="flex:0 0 auto">' + (isNew ? "Создать" : "Открыть") + "</button></div>"
-    + '<p class="hint">Фраза не уходит никуда с этой страницы. В репозитории лежит только зашифрованный текст — без фразы его не прочитать.</p>'
+    + strengthHTML("", "pw")
+    + '<p class="hint">Фраза не покидает эту страницу. В репозитории лежит только зашифрованный текст — но он публичный, поэтому единственная реальная защита — стойкость самой фразы: её можно подбирать офлайн без ограничений по попыткам.</p>'
+    + (Vault.supported() ? '<p class="hint" style="margin-top:8px">После входа можно будет один раз настроить быстрый вход по короткому PIN-коду на этом устройстве — сама фраза при этом хранится в зашифрованном виде, недоступном для копирования извне браузера.</p>' : "")
     + (repoReady() ? "" : '<p class="hint" style="margin-top:12px">Репозиторий не определился по адресу — укажите его вручную после входа, в ⚙ Настройках.</p>')
   );
-  var f = $("#pw"); if (f) setTimeout(function () { f.focus(); }, 60);
+  var f = $("#pw");
+  if (f) {
+    setTimeout(function () { f.focus(); }, 60);
+    f.addEventListener("input", function () {
+      var m = $('[data-pwmeter-for="pw"]');
+      if (m) m.outerHTML = strengthHTML(f.value, "pw");
+    });
+  }
+}
+
+/* быстрый вход по PIN, когда фраза уже безопасно запомнена на этом устройстве */
+var pinFails = 0, pinLockUntil = 0;
+function gatePin() {
+  var locked = Date.now() < pinLockUntil;
+  gateShell(
+    '<div class="lock">🔓</div>'
+    + (gateErr ? '<div class="err">' + esc(gateErr) + "</div>" : "")
+    + '<p class="note" style="margin-bottom:16px">Введите PIN этого устройства<span class="caret">&nbsp;</span></p>'
+    + '<div class="pinrow"><input class="field" id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN"' + (locked ? " disabled" : "") + '>'
+    + '<button class="btn primary" data-unlockpin="1" style="flex:0 0 auto"' + (locked ? " disabled" : "") + '>Открыть</button></div>'
+    + (locked ? '<p class="hint">Слишком много неверных попыток. Подождите немного и попробуйте снова, либо введите фразу целиком.</p>' : "")
+    + '<p class="note" style="margin-top:8px"><button class="btn ghost" data-usefullpass="1">Ввести кодовую фразу целиком</button></p>'
+    + '<p class="hint" style="margin-top:14px">PIN разблокирует фразу, сохранённую только в этом браузере — сама фраза остаётся вашей главной защитой.</p>'
+  );
+  var f = $("#pin"); if (f && !locked) setTimeout(function () { f.focus(); }, 60);
+}
+
+function tryPin() {
+  var f = $("#pin");
+  var pin = f ? f.value : "";
+  if (!pin) { if (f) f.focus(); return; }
+  gateErr = "";
+  Vault.unlock(pin).then(function (p) {
+    return decryptBoard(remoteText, p).then(function (b) {
+      pass = p; state = b; lastText = remoteText;
+      if (!state.members) state.members = [];
+      pinFails = 0;
+      render();
+      startPolling();
+    });
+  }).catch(function () {
+    pinFails++;
+    if (pinFails >= 5) { pinLockUntil = Date.now() + Math.min(120000, 5000 * Math.pow(2, pinFails - 5)); }
+    gateErr = "PIN не подошёл.";
+    gatePin();
+  });
+}
+
+function offerVault() {
+  if (!Vault.supported() || Vault.has() || !pass) return;
+  openModal({ type: "vaultoffer" });
 }
 
 function gateName() {
@@ -840,13 +1090,19 @@ function drawModal() {
   }
 
   if (m.type === "team") {
-    h = '<div class="modal" role="dialog" aria-modal="true"><h2>Команда<button class="btn ghost x" data-close="1">✕</button></h2>'
-      + '<div class="mbody"><p class="note">Ники для назначения тасков. Каждый выбирает себя при входе — доска запоминает выбор в его браузере.</p><div class="list">';
+    h = '<div class="modal wide" role="dialog" aria-modal="true"><h2>Команда<button class="btn ghost x" data-close="1">✕</button></h2>'
+      + '<div class="mbody"><p class="note">Ники для назначения тасков. Каждый выбирает себя при входе — доска запоминает выбор в его браузере. '
+      + '«Проверяющий» — такой участник может ставить галочку подтверждения на тасках (перепроверка).</p><div class="list">';
     if (!state.members.length) h += '<div class="note">Пока никого нет.</div>';
     state.members.forEach(function (mm) {
-      h += '<div class="listrow"><span class="ava" style="background:' + esc(mm.color) + '">' + esc(initials(mm.name)) + "</span>"
+      h += '<div class="listrow mrow">'
+        + avaHTML(mm)
+        + '<label class="btn ghost" style="font-size:10px;padding:5px 6px;cursor:pointer;flex:0 0 auto">Фото'
+        + '<input type="file" accept="image/*" data-mavatar="' + esc(mm.id) + '" style="display:none"></label>'
+        + (mm.avatar ? '<button class="btn ghost" data-mavatardel="' + esc(mm.id) + '" title="Убрать фото" style="font-size:10px;padding:5px 6px;flex:0 0 auto">✕фото</button>' : "")
         + '<input class="field" value="' + esc(mm.name) + '" data-mname="' + esc(mm.id) + '" aria-label="Ник">'
         + '<input type="color" value="' + esc(mm.color) + '" data-mcolor="' + esc(mm.id) + '" aria-label="Цвет">'
+        + '<label class="mchk"><input type="checkbox" data-mverify="' + esc(mm.id) + '"' + (mm.canVerify ? " checked" : "") + '>Проверяющий</label>'
         + '<button class="btn danger" data-mdel="' + esc(mm.id) + '" title="Убрать">✕</button></div>';
     });
     h += '</div><div class="row"><input class="field" id="newmember" placeholder="ник" autocomplete="off">'
@@ -863,6 +1119,20 @@ function drawModal() {
     h += '</div><div class="row"><input class="field" id="newme" placeholder="ваш ник" autocomplete="off">'
       + '<button class="btn primary" data-joinme="1" style="flex:0 0 auto">Войти</button></div></div>'
       + '<div class="mfoot"><div class="spacer"></div><button class="btn ghost" data-forgetme="1">Сменить ник</button></div></div>';
+  }
+
+  if (m.type === "vaultoffer") {
+    h = '<div class="modal" role="dialog" aria-modal="true"><h2>Быстрый вход на этом устройстве<button class="btn ghost x" data-close="1">✕</button></h2>'
+      + '<div class="mbody">'
+      + '<p class="note">Можно запомнить кодовую фразу на этом устройстве, чтобы не вводить её при каждом заходе. '
+      + 'Сама фраза при этом хранится в зашифрованном виде ключом, который недоступен для копирования из браузера — '
+      + 'простое копирование данных сайта (бэкап, синхронизация) фразу не выдаст. Разблокировка — коротким PIN, который нигде не хранится.</p>'
+      + '<div><label class="lbl" for="vp1">Придумайте PIN (4–8 цифр)</label>'
+      + '<div class="row"><input class="field" id="vp1" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN">'
+      + '<input class="field" id="vp2" type="password" inputmode="numeric" autocomplete="off" placeholder="ещё раз"></div></div>'
+      + '<p class="hint">PIN — это удобство для этого устройства, а не замена самой фразы: если данные утекут вместе с этим устройством, PIN тоже подберут. Не используйте один и тот же PIN, что и код разблокировки телефона, если устройство общее.</p>'
+      + '</div><div class="mfoot"><button class="btn ghost" data-close="1">Не сейчас</button>'
+      + '<div class="spacer"></div><button class="btn primary" data-vaultsave="1">Запомнить</button></div></div>';
   }
 
   if (m.type === "settings") {
@@ -883,11 +1153,25 @@ function drawModal() {
       + '<div class="row"><input class="field" id="s-pw1" type="password" placeholder="новая фраза" autocomplete="new-password">'
       + '<input class="field" id="s-pw2" type="password" placeholder="ещё раз" autocomplete="new-password">'
       + '<button class="btn" data-changepw="1" style="flex:0 0 auto">Сменить</button></div>'
-      + '<p class="hint">Доска перешифруется и сохранится. Старая фраза перестанет подходить — раздайте новую команде.</p></div>'
+      + strengthHTML("", "s-pw1")
+      + '<p class="hint">Доска перешифруется и сохранится. Старая фраза перестанет подходить — раздайте новую команде. '
+      + 'Смените фразу сейчас, если есть подозрение, что кто-то посторонний мог её узнать — старая должна считаться скомпрометированной.</p></div>'
       + '<div><label class="lbl">Без токена</label>'
       + '<button class="btn" data-download="1">Скачать data.json</button>'
       + '<p class="hint">Запасной путь: скачать зашифрованный файл и загрузить его в репозиторий вручную — '
       + 'на странице репозитория <code>Add file → Upload files</code>, перетащить, <code>Commit changes</code>.</p></div>'
+      + '<div><label class="lbl">Быстрый вход на этом устройстве</label>'
+      + '<div class="vaultbox">'
+      + (Vault.has()
+        ? '<p class="hint" style="margin-top:0">Фраза запомнена на этом устройстве в зашифрованном виде, разблокируется PIN-кодом. '
+          + 'Скопировать её отсюда без этого браузера и без PIN нельзя.</p>'
+          + '<button class="btn" data-vaultchangepin="1">Сменить PIN</button> '
+          + '<button class="btn danger" data-forgetpass="1">Забыть на этом устройстве</button>'
+        : (Vault.supported()
+          ? '<p class="hint" style="margin-top:0">Сейчас не запомнена — при каждом открытии сайта фразу будут спрашивать.</p>'
+            + '<button class="btn" data-vaultsetup="1">Настроить быстрый вход (PIN)</button>'
+          : '<p class="hint" style="margin-top:0">Этот браузер не поддерживает безопасное локальное хранилище — быстрый вход недоступен, фразу нужно вводить каждый раз.</p>'))
+      + "</div></div>"
       + '</div><div class="mfoot"><button class="btn danger" data-forget="1">Забыть токен</button>'
       + '<div class="spacer"></div><button class="btn primary" data-savesettings="1">Сохранить</button></div></div>';
   }
@@ -939,6 +1223,8 @@ document.addEventListener("click", function (e) {
 
   /* --- вход --- */
   if (e.target.closest("[data-unlock]")) { unlock(); return; }
+  if (e.target.closest("[data-unlockpin]")) { tryPin(); return; }
+  if (e.target.closest("[data-usefullpass]")) { gateErr = ""; gatePassword(); return; }
   if ((el = e.target.closest("[data-beme]"))) {
     var mem = byId(state.members, el.getAttribute("data-beme"));
     if (mem) { setMe({ id: mem.id, name: mem.name, color: mem.color }); closeModal(); render(); }
@@ -983,10 +1269,21 @@ document.addEventListener("click", function (e) {
 
   /* --- доска --- */
   if ((el = e.target.closest("[data-addcard]"))) { openModal({ type: "task", colId: el.getAttribute("data-addcard") }); return; }
+  if ((el = e.target.closest("[data-editcol]"))) { openModal({ type: "column", colId: el.getAttribute("data-editcol") }); return; }
   if ((el = e.target.closest(".tile.base"))) {
     var cid = el.getAttribute("data-col");
     if (ui.folded[cid]) delete ui.folded[cid]; else ui.folded[cid] = true;
     LS.set("folded", ui.folded); render(); return;
+  }
+  if ((el = e.target.closest("[data-verify]"))) {
+    var vf = findTask(el.getAttribute("data-verify"));
+    if (vf) {
+      vf.task.verified = !vf.task.verified;
+      if (vf.task.verified) { vf.task.verifiedBy = me ? me.id : null; vf.task.verifiedAt = Date.now(); }
+      else { vf.task.verifiedBy = null; vf.task.verifiedAt = null; }
+      markDirty(); render();
+    }
+    return;
   }
   if ((el = e.target.closest(".tile.card"))) {
     var tid = el.getAttribute("data-task");
@@ -1093,6 +1390,11 @@ document.addEventListener("click", function (e) {
     if (addMember(inp.value)) { inp.value = ""; render(); drawModal(); }
     return;
   }
+  if ((el = e.target.closest("[data-mavatardel]"))) {
+    var mAv = byId(state.members, el.getAttribute("data-mavatardel"));
+    if (mAv) { delete mAv.avatar; markDirty(); render(); drawModal(); }
+    return;
+  }
   if ((el = e.target.closest("[data-mdel]"))) {
     var mid = el.getAttribute("data-mdel");
     state.members = state.members.filter(function (x) { return x.id !== mid; });
@@ -1102,6 +1404,17 @@ document.addEventListener("click", function (e) {
   }
 
   /* --- настройки --- */
+  if (e.target.closest("[data-vaultsave]")) {
+    var vp1 = $("#vp1").value.trim(), vp2 = $("#vp2").value.trim();
+    if (!/^\d{4,8}$/.test(vp1)) { alert("PIN — от 4 до 8 цифр."); return; }
+    if (vp1 !== vp2) { alert("PIN не совпадает."); return; }
+    Vault.store(pass, vp1).then(function () {
+      closeModal(); render();
+    }).catch(function () {
+      alert("Не удалось сохранить на этом устройстве (браузер не поддерживает нужное хранилище).");
+    });
+    return;
+  }
   if (e.target.closest("[data-savesettings]")) {
     token = $("#s-token").value.trim(); LS.set("token", token);
     CFG.owner = $("#s-owner").value.trim();
@@ -1128,12 +1441,21 @@ document.addEventListener("click", function (e) {
   if (e.target.closest("[data-forget]")) {
     token = ""; LS.del("token"); closeModal(); render(); return;
   }
+  if (e.target.closest("[data-forgetpass]")) {
+    Vault.clear(); closeModal(); render(); return;
+  }
+  if (e.target.closest("[data-vaultsetup]") || e.target.closest("[data-vaultchangepin]")) {
+    closeModal(); openModal({ type: "vaultoffer" }); return;
+  }
   if (e.target.closest("[data-changepw]")) {
     var p1 = $("#s-pw1").value, p2 = $("#s-pw2").value;
-    if (!p1 || p1.length < 4) { alert("Фраза слишком короткая — хотя бы 4 символа."); return; }
+    if (!p1 || p1.length < 8) { alert("Фраза слишком короткая — минимум 8 символов, лучше 12+."); return; }
     if (p1 !== p2) { alert("Фразы не совпадают."); return; }
+    var hadVault = Vault.has();
     pass = p1; closeModal(); markDirty(); save(true);
-    alert("Фраза изменена. Раздайте новую команде — старая больше не подойдёт.");
+    if (hadVault) { Vault.clear(); } /* старый PIN шифровал старую фразу — сбрасываем, предложим настроить заново */
+    alert("Фраза изменена. Раздайте новую команде — старая больше не подойдёт." + (hadVault ? " Быстрый вход на этом устройстве сброшен — настройте заново, если нужно." : ""));
+    if (hadVault) offerVault();
     return;
   }
 });
@@ -1153,6 +1475,10 @@ document.addEventListener("input", function (e) {
       var q = $("#q"); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
     }, 160);
   }
+  if (e.target.id === "s-pw1") {
+    var sm = $('[data-pwmeter-for="s-pw1"]');
+    if (sm) sm.outerHTML = strengthHTML(e.target.value, "s-pw1");
+  }
 });
 
 document.addEventListener("change", function (e) {
@@ -1161,6 +1487,17 @@ document.addEventListener("change", function (e) {
   else if ((id = el.getAttribute("data-stcolor"))) { var s2 = byId(state.statuses, id); if (s2) { s2.color = el.value; markDirty(); render(); drawModal(); } }
   else if ((id = el.getAttribute("data-mname"))) { var m = byId(state.members, id); if (m) { m.name = el.value.trim() || m.name; if (me && me.id === id) setMe({ id: m.id, name: m.name, color: m.color }); markDirty(); render(); drawModal(); } }
   else if ((id = el.getAttribute("data-mcolor"))) { var m2 = byId(state.members, id); if (m2) { m2.color = el.value; if (me && me.id === id) setMe({ id: m2.id, name: m2.name, color: m2.color }); markDirty(); render(); drawModal(); } }
+  else if ((id = el.getAttribute("data-mverify"))) { var m3 = byId(state.members, id); if (m3) { m3.canVerify = !!el.checked; markDirty(); render(); drawModal(); } }
+  else if ((id = el.getAttribute("data-mavatar"))) {
+    var m4 = byId(state.members, id);
+    var file = el.files && el.files[0];
+    if (m4 && file) {
+      resizeImageFile(file, 96, function (dataUrl) {
+        if (dataUrl) { m4.avatar = dataUrl; markDirty(); render(); drawModal(); }
+        else alert("Не получилось прочитать изображение.");
+      });
+    }
+  }
 });
 
 document.addEventListener("keydown", function (e) {
@@ -1171,6 +1508,7 @@ document.addEventListener("keydown", function (e) {
   }
   if (e.key === "Enter") {
     if (e.target.id === "pw") { e.preventDefault(); unlock(); }
+    else if (e.target.id === "pin") { e.preventDefault(); tryPin(); }
     else if (e.target.id === "t-title" || e.target.id === "c-name") {
       e.preventDefault();
       var b = $(".scrim [data-savetask]") || $(".scrim [data-savecol]"); if (b) b.click();
@@ -1266,7 +1604,20 @@ document.addEventListener("pointercancel", endDrag);
 window.addEventListener("blur", endDrag);
 
 /* ============================== запуск ============================== */
-var boardMissing = false, remoteText = null;
+var boardMissing = false, remoteText = null, pollStarted = false;
+
+function startPolling() {
+  if (pollStarted) return;
+  pollStarted = true;
+  /* короткий опрос репозитория, чтобы новые/изменённые таски подтягивались без ручного обновления страницы.
+     Без токена GitHub считает запросы по IP (лимит ниже) — опрашиваем реже, чтобы не упереться в лимит. */
+  var everyMs = token ? 20000 : 90000;
+  setInterval(function () { if (!dirty && !ui.modal && document.visibilityState !== "hidden") refresh(true); }, everyMs);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && !dirty && !ui.modal) refresh(true);
+  });
+  window.addEventListener("focus", function () { if (!dirty && !ui.modal) refresh(true); });
+}
 
 function unlock() {
   var f = $("#pw");
@@ -1274,11 +1625,13 @@ function unlock() {
   if (!p) { if (f) f.focus(); return; }
   gateErr = "";
   if (boardMissing) {
-    if (p.length < 4) { gateErr = "Фраза слишком короткая — хотя бы 4 символа."; gatePassword(); return; }
+    if (p.length < 8) { gateErr = "Фраза слишком короткая — минимум 8 символов, лучше 12+."; gatePassword(); return; }
     pass = p;
     state = seed();
     dirty = true;
     render();
+    startPolling();
+    offerVault();
     if (token) save(true);
     return;
   }
@@ -1286,7 +1639,8 @@ function unlock() {
     pass = p; state = b; lastText = remoteText;
     if (!state.members) state.members = [];
     gateErr = ""; render();
-    setInterval(function () { if (!dirty && !ui.modal) refresh(true); }, 180000);
+    startPolling();
+    offerVault();
   }).catch(function () {
     gateErr = "Фраза не подошла. Проверьте раскладку и регистр.";
     gatePassword();
@@ -1299,10 +1653,15 @@ if (!window.crypto || !crypto.subtle) {
     + '<p class="note">Шифрование недоступно: страницу нужно открывать по https (GitHub Pages) '
     + 'или через localhost. Открытый напрямую файл с диска браузер считает небезопасным.</p></div></div>';
 } else {
+  /* старая версия сайта хранила фразу открытым текстом в localStorage — если она осталась,
+     удаляем её без использования: раз доступ мог утечь, доверять этой записи больше нельзя. */
+  if (LS.get("pass", "")) { LS.del("pass"); LS.del("rememberpw"); }
+
   gateShell('<p class="note">Загрузка…<span class="caret">&nbsp;</span></p>');
   loadRemote().then(function (r) {
     if (r.missing || !r.text) { boardMissing = true; gatePassword(true); return; }
     remoteText = r.text; fileSha = r.sha;
+    if (Vault.has() && Vault.supported()) { gatePin(); return; }
     gatePassword();
   }).catch(function () { boardMissing = true; gatePassword(true); });
 }
