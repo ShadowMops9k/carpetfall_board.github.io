@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CarpetFall Roadmap</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23040a06'/><rect x='7' y='7' width='18' height='18' rx='3' fill='%233af080'/></svg>">
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap');
+
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#040a06;
+  --bg-2:#07120c;
+  --panel:#0a1a11;
+  --panel-2:#0e2517;
+  --panel-3:#123020;
+  --line:rgba(58,240,128,.20);
+  --line-2:rgba(58,240,128,.45);
+  --ph:#3af080;
+  --ph-hi:#8dffbb;
+  --txt:#a4dcb9;
+  --muted:#5e8a70;
+  --ink:#03130a;
+  --z:1;
+  --colw:calc(162px * var(--z));
+  --r:4px;
+}
+html{height:100%}
+body{
+  margin:0;min-height:100%;
+  background:var(--bg);
+  color:var(--txt);
+  font-family:'Share Tech Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:14px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(58,240,128,.10), transparent 60%),
+    radial-gradient(120% 120% at 50% 110%, rgba(58,240,128,.07), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(58,240,128,.045) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(90deg, rgba(58,240,128,.045) 0 1px, transparent 1px 46px),
+    var(--bg);
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:9;pointer-events:none;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
+  opacity:.5;mix-blend-mode:multiply;
+}
+#root{position:relative;z-index:1}
+
+::selection{background:rgba(58,240,128,.30);color:#eafff2}
+:focus-visible{outline:2px solid var(--ph);outline-offset:2px}
+
+/* ---------- scrollbars ---------- */
+*::-webkit-scrollbar{height:10px;width:10px}
+*::-webkit-scrollbar-track{background:rgba(58,240,128,.05)}
+*::-webkit-scrollbar-thumb{background:rgba(58,240,128,.26);border:2px solid transparent;background-clip:padding-box;border-radius:6px}
+*::-webkit-scrollbar-thumb:hover{background:rgba(58,240,128,.45);background-clip:padding-box}
+
+/* ---------- shell ---------- */
+.shell{height:100vh;height:100dvh;display:flex;flex-direction:column;padding:14px;gap:12px}
+
+.nav{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  border:1px solid var(--line-2);border-radius:8px;
+  background:linear-gradient(180deg,rgba(10,26,17,.94),rgba(4,10,6,.94));
+  box-shadow:0 0 0 1px rgba(0,0,0,.5), 0 0 26px rgba(58,240,128,.08);
+  padding:9px 14px;
+}
+.brand{display:flex;align-items:baseline;gap:9px;margin-right:4px}
+.brand b{
+  font-family:'Oxanium',system-ui,sans-serif;font-weight:800;font-size:19px;
+  letter-spacing:.02em;color:#eafff2;text-shadow:0 0 12px rgba(58,240,128,.6)
+}
+.brand b i{font-style:normal;color:var(--ph)}
+.brand span{font-size:11px;color:var(--muted);letter-spacing:.22em;text-transform:uppercase}
+.nav .spacer{flex:1}
+.navlinks{display:flex;gap:4px;flex-wrap:wrap}
+
+/* ---------- controls ---------- */
+.btn{
+  font-family:'Oxanium',system-ui,sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;
+  background:transparent;color:var(--txt);
+  border:1px solid var(--line);border-radius:var(--r);
+  padding:6px 11px;cursor:pointer;transition:background .13s,color .13s,border-color .13s;
+  white-space:nowrap;
+}
+.btn:hover{border-color:var(--line-2);color:var(--ph-hi);background:rgba(58,240,128,.08)}
+.btn.primary{background:var(--ph);color:var(--ink);border-color:var(--ph);text-shadow:none}
+.btn.primary:hover{background:var(--ph-hi);color:var(--ink)}
+.btn.ghost{border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ph-hi);background:rgba(58,240,128,.07)}
+.btn.danger{border-color:rgba(190,72,66,.5);color:#e08a84}
+.btn.danger:hover{background:rgba(190,72,66,.16);border-color:#be4842;color:#ffb3ad}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+.field{
+  font-family:'Share Tech Mono',monospace;font-size:13px;
+  background:rgba(3,19,10,.75);color:var(--ph-hi);
+  border:1px solid var(--line);border-radius:var(--r);
+  padding:7px 10px;width:100%;
+}
+.field:focus{border-color:var(--line-2);outline:none;box-shadow:0 0 0 1px rgba(58,240,128,.2)}
+textarea.field{resize:vertical;min-height:96px;line-height:1.55}
+select.field{cursor:pointer}
+option{background:#0a1a11;color:var(--ph-hi)}
+label.lbl{display:block;font-family:'Oxanium',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+
+.user{
+  display:flex;align-items:center;gap:8px;border:1px solid var(--line);
+  border-radius:var(--r);padding:4px 6px 4px 4px;cursor:pointer;background:transparent;
+}
+.user:hover{border-color:var(--line-2);background:rgba(58,240,128,.07)}
+.ava{
+  width:26px;height:26px;border-radius:3px;display:grid;place-items:center;
+  font-family:'Oxanium',sans-serif;font-weight:800;font-size:12px;color:var(--ink);
+  background:var(--ph);
+}
+.user .nm{font-family:'Oxanium',sans-serif;font-weight:600;font-size:13px;color:var(--ph-hi);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- frame / board ---------- */
+.frame{
+  position:relative;flex:1;min-height:0;display:flex;flex-direction:column;
+  overflow:hidden;
+  border:1px solid var(--line-2);border-radius:10px;
+  background:linear-gradient(180deg,rgba(8,20,13,.72),rgba(4,10,6,.86));
+  box-shadow:inset 0 0 60px rgba(58,240,128,.05), 0 0 30px rgba(58,240,128,.05);
+}
+.frame::before,.frame::after{
+  content:'';position:absolute;width:26px;height:26px;border:2px solid var(--ph);pointer-events:none;opacity:.75
+}
+.frame::before{top:-2px;left:-2px;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
+.frame::after{bottom:-2px;right:-2px;border-left:0;border-top:0;border-radius:0 0 10px 0}
+
+.toolbar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:11px 14px;border-bottom:1px solid var(--line);
+}
+.search{position:relative;flex:0 1 260px;min-width:170px}
+.search .field{padding-left:28px}
+.search::before{content:'>';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ph);font-size:13px}
+
+.chips{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  font-family:'Oxanium',sans-serif;font-size:11px;font-weight:600;letter-spacing:.05em;
+  text-transform:uppercase;padding:4px 9px;border-radius:20px;
+  border:1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  color:color-mix(in srgb, var(--c) 62%, #dff7e6);
+  background:color-mix(in srgb, var(--c) 10%, transparent);
+  transition:background .13s,opacity .13s;
+}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 7px var(--c)}
+.chip.off{opacity:.32;filter:grayscale(.6)}
+.chip:hover{background:color-mix(in srgb, var(--c) 22%, transparent)}
+.chip .n{opacity:.75;font-variant-numeric:tabular-nums}
+
+.progress{display:flex;height:5px;border-radius:3px;overflow:hidden;flex:1 1 140px;min-width:120px;background:rgba(58,240,128,.08)}
+.progress i{display:block;height:100%;background:var(--c)}
+
+.boardwrap{flex:1;min-height:0;overflow:auto;padding:16px 14px 18px}
+.board{display:flex;align-items:flex-end;gap:9px;min-height:100%;width:max-content;padding-right:80px}
+
+.col{display:flex;flex-direction:column-reverse;gap:5px;width:var(--colw);flex:0 0 auto}
+.col.dragover .base{box-shadow:0 0 0 2px var(--ph), 0 0 18px rgba(58,240,128,.4)}
+
+.tile{
+  border:1px solid color-mix(in srgb, var(--c) 55%, transparent);
+  background:color-mix(in srgb, var(--c) 20%, #071009);
+  color:color-mix(in srgb, var(--c) 40%, #e6fff0);
+  border-radius:var(--r);
+  padding:calc(8px * var(--z)) 9px;font-size:calc(12px * var(--z));line-height:1.28;
+  text-align:center;cursor:pointer;position:relative;
+  transition:transform .1s, box-shadow .13s, background .13s;
+  word-break:break-word;
+}
+.tile:hover{background:color-mix(in srgb, var(--c) 32%, #071009);box-shadow:0 0 14px color-mix(in srgb, var(--c) 30%, transparent)}
+.tile.base{
+  position:sticky;bottom:0;z-index:3;
+  min-height:calc(72px * var(--z));display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb, var(--c) 30%, #071009);
+  font-family:'Oxanium',sans-serif;font-weight:700;font-size:calc(13px * var(--z));letter-spacing:.01em;
+  color:color-mix(in srgb, var(--c) 28%, #eafff2);
+  box-shadow:0 6px 16px rgba(3,10,6,.8);
+}
+.card{min-height:calc(34px * var(--z));display:flex;flex-direction:column;justify-content:center;text-align:center}
+.card>.ttl{display:block}
+.card .reveal{display:grid;grid-template-rows:0fr;transition:grid-template-rows .18s ease}
+.card .reveal>.inner{overflow:hidden;min-height:0}
+@media (hover:hover){
+  body:not(.dnd) .card:hover{z-index:4;box-shadow:0 6px 22px rgba(3,10,6,.7), 0 0 16px color-mix(in srgb, var(--c) 35%, transparent)}
+  body:not(.dnd) .card:hover .reveal{grid-template-rows:1fr}
+}
+.card:focus-visible .reveal{grid-template-rows:1fr}
+.card.open .reveal{grid-template-rows:1fr}
+.card.dragging{opacity:.35}
+.card .who{
+  position:absolute;top:2px;right:3px;font-size:9px;letter-spacing:.04em;
+  color:color-mix(in srgb, var(--c) 30%, #dff7e6);opacity:.85;
+  font-family:'Oxanium',sans-serif;font-weight:700;
+}
+.card .mark{position:absolute;top:3px;left:4px;font-size:9px;opacity:.8}
+.card .body{
+  margin-top:6px;padding-top:6px;border-top:1px solid color-mix(in srgb, var(--c) 35%, transparent);
+  font-size:11px;text-align:left;line-height:1.4;white-space:pre-wrap;opacity:.92;width:100%;
+  word-break:break-word;
+}
+.card .body .kv{display:flex;gap:6px;font-size:10px;opacity:.8;letter-spacing:.02em;margin-top:4px;
+  font-family:'Oxanium',sans-serif;font-weight:600;text-transform:uppercase;flex-wrap:wrap}
+
+.base .count{
+  position:absolute;top:3px;right:5px;font-size:10px;opacity:.7;font-variant-numeric:tabular-nums;
+  font-family:'Oxanium',sans-serif;font-weight:700;
+}
+.base .fold{position:absolute;top:3px;left:5px;font-size:10px;opacity:.7}
+.addcard{
+  border:1px dashed var(--line);background:transparent;color:var(--muted);
+  border-radius:var(--r);padding:5px;font-size:12px;cursor:pointer;
+  font-family:'Oxanium',sans-serif;font-weight:600;letter-spacing:.08em;
+}
+.addcard:hover{border-color:var(--line-2);color:var(--ph-hi);background:rgba(58,240,128,.06)}
+.addcol{
+  width:var(--colw);flex:0 0 auto;min-height:72px;border:1px dashed var(--line);
+  background:transparent;color:var(--muted);border-radius:var(--r);cursor:pointer;
+  font-family:'Oxanium',sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.addcol:hover{border-color:var(--line-2);color:var(--ph-hi);background:rgba(58,240,128,.06)}
+
+.toast{
+  position:fixed;right:18px;bottom:18px;z-index:50;max-width:340px;
+  display:flex;flex-direction:column;gap:10px;
+  border:1px solid var(--line-2);border-radius:8px;padding:13px 15px;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  box-shadow:0 18px 46px rgba(0,0,0,.65), 0 0 26px rgba(58,240,128,.10);
+  font-size:12px;line-height:1.5;
+}
+.toast b{color:var(--ph-hi);font-family:'Oxanium',sans-serif;letter-spacing:.03em}
+.toast .trow{display:flex;gap:7px}
+.zoom{display:inline-flex;gap:2px}
+.zoom .btn{padding:4px 9px;font-size:14px;line-height:1}
+.drag-ghost{position:fixed;left:0;top:0;pointer-events:none;z-index:80;opacity:.92;
+  box-shadow:0 10px 26px rgba(0,0,0,.6), 0 0 18px color-mix(in srgb, var(--c) 45%, transparent);
+  transform-origin:center;display:flex;align-items:center;justify-content:center;text-align:center}
+.empty{color:var(--muted);padding:40px 6px;font-size:13px}
+
+/* ---------- modal ---------- */
+.scrim{
+  position:fixed;inset:0;z-index:40;background:rgba(2,7,4,.82);
+  display:flex;align-items:center;justify-content:center;padding:18px;
+  backdrop-filter:blur(2px);
+}
+.modal{
+  width:min(560px,100%);max-height:88vh;overflow:auto;
+  border:1px solid var(--line-2);border-radius:9px;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 24px 70px rgba(0,0,0,.7), 0 0 40px rgba(58,240,128,.10);
+}
+.modal.wide{width:min(720px,100%)}
+.modal h2{
+  margin:0;padding:14px 16px;border-bottom:1px solid var(--line);
+  font-family:'Oxanium',sans-serif;font-size:15px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ph-hi);display:flex;align-items:center;gap:10px
+}
+.modal h2 .x{margin-left:auto}
+.mbody{padding:16px;display:flex;flex-direction:column;gap:14px}
+.mfoot{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mfoot .spacer{flex:1}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>*{flex:1 1 160px}
+.meta{font-size:11px;color:var(--muted);letter-spacing:.04em}
+
+.picker{display:flex;gap:6px;flex-wrap:wrap}
+.pick{
+  cursor:pointer;border-radius:var(--r);padding:6px 10px;font-size:12px;
+  font-family:'Oxanium',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  border:1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  background:color-mix(in srgb, var(--c) 12%, transparent);
+  color:color-mix(in srgb, var(--c) 55%, #dff7e6);
+}
+.pick[aria-pressed="true"]{background:color-mix(in srgb, var(--c) 40%, #071009);box-shadow:0 0 0 1px var(--c)}
+
+.list{display:flex;flex-direction:column;gap:7px}
+.listrow{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:7px 9px}
+.listrow input[type=color]{width:34px;height:28px;padding:0;border:1px solid var(--line);background:transparent;border-radius:3px;cursor:pointer}
+.listrow .field{flex:1}
+.listrow .grab{color:var(--muted);font-size:12px;cursor:grab}
+
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+.warn{
+  border:1px solid rgba(190,140,60,.45);background:rgba(190,140,60,.10);
+  color:#e0c58a;border-radius:var(--r);padding:9px 11px;font-size:12px;line-height:1.5
+}
+
+/* ---------- save indicator ---------- */
+.save{
+  display:inline-flex;align-items:center;gap:6px;font-family:'Oxanium',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)
+}
+.save .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.save.on .dot{background:var(--ph);box-shadow:0 0 8px var(--ph);animation:pulse .9s infinite}
+.save.err .dot{background:#be4842;box-shadow:0 0 8px #be4842}
+@keyframes pulse{50%{opacity:.25}}
+
+/* ---------- login ---------- */
+.gate{
+  position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;
+  background:radial-gradient(80% 70% at 50% 40%, rgba(9,26,16,.97), rgba(2,7,4,.99));
+}
+.gatebox{width:min(420px,100%);text-align:center}
+.gatebox .logo{
+  font-family:'Oxanium',sans-serif;font-weight:800;font-size:34px;color:#eafff2;
+  letter-spacing:.02em;text-shadow:0 0 22px rgba(58,240,128,.55);margin-bottom:4px
+}
+.gatebox .logo i{font-style:normal;color:var(--ph)}
+.gatebox .sub{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:26px}
+.who-list{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:18px}
+.who-list .btn{font-size:13px;padding:8px 13px;text-transform:none;letter-spacing:.02em}
+.gate .caret{display:inline-block;width:9px;background:var(--ph);animation:blink 1.05s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+}
+@media (max-width:640px){
+  .shell{padding:8px;gap:8px}
+  .nav{padding:8px 10px;gap:10px}
+  :root{--colw:146px}
+}
+
+/* ---------- страница входа по паролю ---------- */
+.gatebox .pwrow{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.gatebox .pwrow .field{flex:1 1 220px;text-align:center;letter-spacing:.2em}
+.gate .err{
+  border:1px solid rgba(190,72,66,.5);background:rgba(190,72,66,.12);color:#ffb3ad;
+  border-radius:var(--r);padding:10px 13px;font-size:12px;line-height:1.5;margin-bottom:16px;text-align:left
+}
+.gate .ok{
+  border:1px solid rgba(58,240,128,.4);background:rgba(58,240,128,.08);color:var(--ph-hi);
+  border-radius:var(--r);padding:10px 13px;font-size:12px;line-height:1.5;margin-bottom:16px;text-align:left
+}
+.lock{font-size:34px;line-height:1;margin-bottom:14px;opacity:.85}
+.toast .trow{display:flex;gap:7px;flex-wrap:wrap}
+.kbd{
+  font-family:'Share Tech Mono',monospace;font-size:11px;border:1px solid var(--line);
+  border-radius:3px;padding:1px 5px;color:var(--ph-hi);background:rgba(3,19,10,.6)
+}
+.hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
+.hint code{color:var(--ph-hi);font-size:11px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+"use strict";
+
+/* ============================== мелочи ============================== */
+var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+  return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+var uid = function () { return Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4); };
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var byId = function (a, id) { for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i]; return null; };
+var LS = {
+  get: function (k, d) { try { var v = localStorage.getItem("cf_" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem("cf_" + k, JSON.stringify(v)); } catch (e) {} },
+  del: function (k) { try { localStorage.removeItem("cf_" + k); } catch (e) {} }
+};
+function plural(n, one, few, many) {
+  var a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return n + " " + many;
+  if (b > 1 && b < 5) return n + " " + few;
+  if (b === 1) return n + " " + one;
+  return n + " " + many;
+}
+function initials(n) {
+  n = String(n || "?").trim();
+  var p = n.split(/[\s_\-.]+/).filter(Boolean);
+  return ((p[0] || "?")[0] + (p[1] ? p[1][0] : "")).toUpperCase();
+}
+
+/* ============================== где лежит файл ============================== */
+/* Определяем репозиторий по адресу страницы: username.github.io/repo/ */
+function detectRepo() {
+  var host = location.hostname, parts = location.pathname.split("/").filter(Boolean);
+  var owner = "", repo = "";
+  if (/\.github\.io$/i.test(host)) {
+    owner = host.replace(/\.github\.io$/i, "");
+    repo = parts.length ? parts[0] : host;   /* корневой репозиторий = username.github.io */
+  }
+  return { owner: owner, repo: repo };
+}
+var det = detectRepo();
+var CFG = Object.assign({
+  owner: det.owner, repo: det.repo, branch: "main", path: "data.json"
+}, LS.get("repo", {}));
+function saveCFG() { LS.set("repo", CFG); }
+function repoReady() { return !!(CFG.owner && CFG.repo); }
+var token = LS.get("token", "");
+
+/* ============================== шифрование ============================== */
+var ITER = 250000;
+var enc = new TextEncoder(), dec = new TextDecoder();
+
+function b64(buf) {
+  var b = new Uint8Array(buf), s = "";
+  for (var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
+  return btoa(s);
+}
+function unb64(str) {
+  var s = atob(String(str).replace(/\s+/g, "")), b = new Uint8Array(s.length);
+  for (var i = 0; i < s.length; i++) b[i] = s.charCodeAt(i);
+  return b;
+}
+function deriveKey(pass, salt) {
+  return crypto.subtle.importKey("raw", enc.encode(pass), "PBKDF2", false, ["deriveKey"])
+    .then(function (base) {
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: salt, iterations: ITER, hash: "SHA-256" },
+        base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    });
+}
+function encryptBoard(obj, pass) {
+  var salt = crypto.getRandomValues(new Uint8Array(16));
+  var iv = crypto.getRandomValues(new Uint8Array(12));
+  return deriveKey(pass, salt).then(function (key) {
+    return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, enc.encode(JSON.stringify(obj)));
+  }).then(function (ct) {
+    return JSON.stringify({ v: 1, kdf: "PBKDF2-SHA256", it: ITER, salt: b64(salt), iv: b64(iv), ct: b64(ct) }, null, 1);
+  });
+}
+function decryptBoard(text, pass) {
+  var box = JSON.parse(text);
+  if (!box || !box.ct) throw new Error("bad_file");
+  return deriveKey(pass, unb64(box.salt)).then(function (key) {
+    return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(box.iv) }, key, unb64(box.ct));
+  }).then(function (buf) { return JSON.parse(dec.decode(buf)); });
+}
+
+/* ============================== GitHub ============================== */
+function api(pathname, opts) {
+  opts = opts || {};
+  opts.headers = Object.assign({ Accept: "application/vnd.github+json" }, opts.headers || {});
+  if (token) opts.headers.Authorization = "Bearer " + token;
+  opts.cache = "no-store";
+  return fetch("https://api.github.com" + pathname, opts);
+}
+function contentsUrl() {
+  return "/repos/" + encodeURIComponent(CFG.owner) + "/" + encodeURIComponent(CFG.repo)
+    + "/contents/" + CFG.path.split("/").map(encodeURIComponent).join("/");
+}
+
+/* читаем файл: сперва через API (свежие данные), иначе — рядом со страницей */
+function loadRemote() {
+  if (!repoReady()) return loadLocalFile();
+  return api(contentsUrl() + "?ref=" + encodeURIComponent(CFG.branch)).then(function (r) {
+    if (r.status === 404) return { missing: true };
+    if (!r.ok) throw new Error("api_" + r.status);
+    return r.json().then(function (j) {
+      return { sha: j.sha, text: dec.decode(unb64(j.content)) };
+    });
+  }).catch(function () { return loadLocalFile(); });
+}
+function loadLocalFile() {
+  return fetch("./" + CFG.path + "?t=" + Date.now(), { cache: "no-store" }).then(function (r) {
+    if (!r.ok) return { missing: true };
+    return r.text().then(function (t) { return { text: t, sha: null, local: true }; });
+  }).catch(function () { return { missing: true }; });
+}
+
+function putRemote(text, message) {
+  var body = {
+    message: message || "board: обновление",
+    content: b64(enc.encode(text)),
+    branch: CFG.branch
+  };
+  if (fileSha) body.sha = fileSha;
+  return api(contentsUrl(), {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  }).then(function (r) {
+    return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, status: r.status, j: j }; });
+  });
+}
+
+/* ============================== состояние ============================== */
+var state = null, me = LS.get("me", null), pass = null, fileSha = null;
+var dirty = false, saving = false, saveTimer = null, conflict = false;
+var lastText = null;
+var ui = {
+  q: "", hidden: {}, onlyMine: false,
+  folded: LS.get("folded", {}), opened: {}, modal: null, draft: {}
+};
+
+function statusOf(id) { return byId(state.statuses, id) || state.statuses[0] || { id: "?", name: "—", color: "#66786c" }; }
+function memberOf(id) { return byId(state.members, id); }
+function countTasks(st) { var n = 0; (st.columns || []).forEach(function (c) { n += (c.tasks || []).length; }); return n; }
+
+function seed() {
+  var S = [
+    { id: "done", name: "Готово", color: "#3ac96a" },
+    { id: "wip", name: "В работе", color: "#b0a45c" },
+    { id: "bug", name: "Проблема", color: "#b04a44" },
+    { id: "hold", name: "Отложено", color: "#66786c" }
+  ];
+  function t(title, st) { return { id: uid(), title: title, desc: "", status: st, assignee: null, author: null, created: Date.now() }; }
+  function c(name, st, tasks) { return { id: uid(), name: name, status: st, tasks: tasks.map(function (x) { return t(x[0], x[1]); }) }; }
+  return {
+    v: 1, subtitle: "Дорожная карта", statuses: S, members: [],
+    columns: [
+      c("Добыча", "wip", [["Деревья", "done"], ["Камни: мелкие / крупные", "wip"], ["Растения / грибы", "wip"]]),
+      c("Силовая броня", "done", [["Убрать верстаки", "hold"], ["Пофиксить баги", "hold"]]),
+      c("Система рук", "wip", [["Оружия", "done"], ["Помп. дробовик", "done"], ["Штык-нож", "done"], ["Кий", "wip"], ["Гранаты", "wip"], ["АК-47", "wip"], ["SPAS", "done"], ["Снайперская винтовка", "done"], ["Deagle", "done"], ["Макаров", "wip"], ["10-мм пистолет", "wip"], ["Топор", "wip"], ["Кирка", "wip"], ["Бензопила", "wip"], ["Бур", "wip"], ["М-16", "wip"], ["Двустволка", "done"]]),
+      c("Лодка", "bug", [["Физика", "wip"], ["Многопользовательское использование", "hold"], ["Вход игрока через катсцену", "hold"], ["Пофиксить баги", "hold"]]),
+      c("Квесты", "bug", [["Диалоги", "wip"]]),
+      c("Физика", "done", [["Пропы", "done"], ["Машины", "wip"], ["Предметы", "wip"]]),
+      c("Бильярд", "wip", [["Доработка сессий", "hold"]]),
+      c("Мин. механики", "done", [["Дождь", "done"], ["Загрузчик моделей", "done"], ["Фикс обновлений блоков", "done"], ["Физ. предметы", "wip"]]),
+      c("Катсцены", "done", [["Гестуры", "wip"]]),
+      c("Фурнитура (стафф)", "done", [["Правки", "done"]]),
+      c("Создание персонажа", "wip", [["Билды", "done"], ["Админ S.P.E.C.I.A.L.", "done"], ["Атрибуты S.P.E.C.I.A.L.", "done"], ["Навыки (скиллы)", "done"], ["Способности (перки)", "wip"], ["Происхождение", "wip"]]),
+      c("Игрок", "done", [["Уровень", "done"], ["Радиация", "done"], ["ХП", "done"], ["Инвентарь", "done"]]),
+      c("Плагин", "done", [["Чат", "done"], ["Таб", "done"], ["АФК-мод", "done"], ["Чат-бабло", "done"], ["Предметы", "done"]]),
+      c("UI / Menu", "wip", [["Движок", "done"], ["Сайт", "wip"], ["Pip-Boy", "wip"], ["S.P.E.C.I.A.L.", "wip"], ["Интерфейс торговли с НПС", "bug"], ["HUD", "wip"]]),
+      c("Система строительства", "hold", []),
+      c("Мобы", "wip", [["Медведь", "done"], ["Игорь", "done"], ["Гуль", "done"], ["Рад. скорпион", "wip"], ["Болотник", "wip"], ["Рад. таракан", "wip"], ["Рад. олень", "wip"], ["Робот-охранник", "wip"], ["Штурмотрон", "hold"], ["Кротокрыс", "wip"], ["Брамин", "wip"], ["Дутень", "hold"], ["Гнус", "wip"], ["Рейдеры", "wip"], ["Супер-мутанты", "wip"], ["Коготь смерти", "wip"]])
+    ]
+  };
+}
+
+/* ============================== сохранение ============================== */
+function setSave(cls, msg) {
+  var el = $("#saveind");
+  if (el) { el.className = "save " + cls; el.innerHTML = '<i class="dot"></i>' + esc(msg); }
+}
+function saveLabel() {
+  if (saving) return ["on", "Сохранение"];
+  if (conflict) return ["err", "Конфликт версий"];
+  if (dirty) return token ? ["on", "Есть правки"] : ["err", "Не сохранено"];
+  return ["", "Сохранено"];
+}
+
+function markDirty() {
+  dirty = true;
+  LS.set("backup", { t: Date.now(), s: state });
+  var l = saveLabel(); setSave(l[0], l[1]);
+  if (!token) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 2500);
+}
+
+function save(force) {
+  if (saving || !token || !repoReady()) return;
+  if (!dirty && !force) return;
+  saving = true; conflict = false;
+  var l = saveLabel(); setSave(l[0], l[1]);
+  var snapshot = JSON.stringify(state);
+  encryptBoard(state, pass).then(function (text) {
+    return putRemote(text, "board: правки от " + (me ? me.name : "команды"));
+  }).then(function (res) {
+    saving = false;
+    if (res.ok) {
+      fileSha = res.j.content && res.j.content.sha;
+      if (JSON.stringify(state) === snapshot) dirty = false;
+      var l2 = saveLabel(); setSave(l2[0], l2[1]);
+      return;
+    }
+    if (res.status === 409 || res.status === 422) { conflict = true; render(); return; }
+    if (res.status === 401 || res.status === 403) { setSave("err", "Токен не подошёл"); return; }
+    setSave("err", "GitHub: ошибка " + res.status);
+  }).catch(function () {
+    saving = false;
+    setSave("err", "Не удалось сохранить");
+  });
+}
+
+/* подтянуть свежую версию из репозитория */
+function refresh(silent) {
+  if (!pass) return;
+  loadRemote().then(function (r) {
+    if (r.missing || !r.text) return;
+    if (r.text === lastText) return;
+    return decryptBoard(r.text, pass).then(function (b) {
+      lastText = r.text; fileSha = r.sha;
+      if (dirty) { conflict = true; render(); return; }
+      state = b;
+      if (!ui.modal) render();
+    });
+  }).catch(function () { if (!silent) setSave("err", "Не удалось обновить"); });
+}
+
+/* ============================== доска ============================== */
+function counts() {
+  var m = {}, total = 0;
+  state.columns.forEach(function (c) { c.tasks.forEach(function (t) { m[t.status] = (m[t.status] || 0) + 1; total++; }); });
+  return { m: m, total: total };
+}
+function matches(t) {
+  if (ui.hidden[t.status]) return false;
+  if (ui.onlyMine && me && t.assignee !== me.id) return false;
+  if (ui.q) {
+    var q = ui.q.toLowerCase();
+    var who = t.assignee ? (memberOf(t.assignee) || {}).name || "" : "";
+    if ((t.title + " " + (t.desc || "") + " " + who).toLowerCase().indexOf(q) < 0) return false;
+  }
+  return true;
+}
+function cardHTML(t, colId) {
+  var st = statusOf(t.status);
+  var who = t.assignee ? memberOf(t.assignee) : null;
+  var kv = '<span class="kv"><span>' + esc(st.name) + "</span>" + (who ? '<span>· ' + esc(who.name) + "</span>" : "") + "</span>";
+  var extra = '<div class="reveal"><div class="inner"><div class="body">'
+    + (t.desc ? esc(t.desc) : '<span style="opacity:.6">без описания</span>') + kv + "</div></div></div>";
+  return '<div class="tile card' + (ui.opened[t.id] ? " open" : "") + '" style="--c:' + esc(st.color) + '" '
+    + 'draggable="false" tabindex="0" role="button" data-task="' + esc(t.id) + '" data-col="' + esc(colId) + '" '
+    + 'title="' + esc(t.title) + (t.desc ? " — " + esc(t.desc.slice(0, 120)) : "") + '">'
+    + (t.desc ? '<span class="mark" data-x="1">▤</span>' : "")
+    + (who ? '<span class="who" data-x="1">' + esc(initials(who.name)) + "</span>" : "")
+    + '<span class="ttl">' + esc(t.title) + "</span>" + extra + "</div>";
+}
+function colHTML(c) {
+  var st = statusOf(c.status);
+  var vis = c.tasks.filter(matches);
+  var folded = !!ui.folded[c.id];
+  var h = '<div class="col" data-colwrap="' + esc(c.id) + '">';
+  h += '<div class="tile base" tabindex="0" role="button" style="--c:' + esc(st.color) + '" data-col="' + esc(c.id) + '" '
+    + 'title="' + esc(c.name) + ' — клик сворачивает, двойной клик открывает настройки раздела">'
+    + '<span class="fold" data-x="1">' + (folded ? "▸" : "▾") + "</span>"
+    + '<span class="count" data-x="1">' + vis.length + (vis.length !== c.tasks.length ? "/" + c.tasks.length : "") + "</span>"
+    + "<span>" + esc(c.name) + "</span></div>";
+  if (!folded) {
+    h += '<button class="addcard" data-addcard="' + esc(c.id) + '">+ таск</button>';
+    vis.forEach(function (t) { h += cardHTML(t, c.id); });
+  }
+  return h + "</div>";
+}
+
+function render() {
+  if (!pass) { gatePassword(); return; }
+  if (!me) { gateName(); return; }
+  var prevBw = $(".boardwrap");
+  var keep = prevBw ? { t: prevBw.scrollTop, l: prevBw.scrollLeft } : null;
+  var cs = counts();
+  var sl = saveLabel();
+  var h = '<div class="shell">';
+
+  h += '<div class="nav">'
+    + '<div class="brand"><b>Carpet<i>FALL</i></b><span>' + esc(state.subtitle || "Дорожная карта") + "</span></div>"
+    + '<div class="navlinks">'
+    + '<button class="btn" data-open="column">+ Раздел</button>'
+    + '<button class="btn" data-open="statuses">Статусы</button>'
+    + '<button class="btn" data-open="team">Команда</button>'
+    + '<button class="btn ghost" data-fold="all">Свернуть всё</button>'
+    + '<button class="btn ghost" data-fold="none">Развернуть</button>'
+    + '<button class="btn ghost" data-refresh="1" title="Подтянуть правки из репозитория">Обновить</button>'
+    + "</div>"
+    + '<div class="spacer"></div>'
+    + (dirty && token ? '<button class="btn primary" data-savenow="1">Сохранить</button>' : "")
+    + '<span id="saveind" class="save ' + sl[0] + '"><i class="dot"></i>' + esc(sl[1]) + "</span>"
+    + '<button class="btn ghost" data-open="settings" title="Настройки">⚙</button>'
+    + '<button class="user" data-open="me">'
+    + '<span class="ava" style="background:' + esc((me && me.color) || "#3af080") + '">' + esc(initials(me.name)) + "</span>"
+    + '<span class="nm">' + esc(me.name) + "</span></button>"
+    + "</div>";
+
+  h += '<div class="frame"><div class="toolbar">'
+    + '<div class="search"><input class="field" id="q" placeholder="поиск по таскам" value="' + esc(ui.q) + '"></div>'
+    + '<div class="chips">';
+  state.statuses.forEach(function (s) {
+    h += '<button class="chip' + (ui.hidden[s.id] ? " off" : "") + '" style="--c:' + esc(s.color) + '" data-tog="' + esc(s.id) + '">'
+      + '<i class="dot"></i>' + esc(s.name) + ' <span class="n">' + (cs.m[s.id] || 0) + "</span></button>";
+  });
+  h += "</div>";
+  if (state.members.length) h += '<button class="chip' + (ui.onlyMine ? "" : " off") + '" style="--c:#3af080" data-mine="1"><i class="dot"></i>Только мои</button>';
+  h += '<div class="progress" title="Всего тасков: ' + cs.total + '">';
+  state.statuses.forEach(function (s) {
+    var w = cs.total ? ((cs.m[s.id] || 0) / cs.total * 100) : 0;
+    if (w > 0) h += '<i style="--c:' + esc(s.color) + ";width:" + w.toFixed(2) + '%"></i>';
+  });
+  h += '</div><span class="meta">' + plural(cs.total, "таск", "таска", "тасков") + " · "
+    + plural(state.columns.length, "раздел", "раздела", "разделов") + "</span>"
+    + '<span class="zoom"><button class="btn ghost" data-zoom="-1" title="Мельче">–</button>'
+    + '<button class="btn ghost" data-zoom="1" title="Крупнее">+</button></span></div>';
+
+  h += '<div class="boardwrap"><div class="board">';
+  if (!state.columns.length) h += '<div class="empty">Разделов пока нет. Нажмите «+ Раздел», чтобы начать.</div>';
+  else state.columns.forEach(function (c) { h += colHTML(c); });
+  h += '<button class="addcol" data-open="column">+ раздел</button>';
+  h += "</div></div></div>";
+
+  if (!token) {
+    h += '<div class="warn">Правки пока живут только в этом браузере. Чтобы их увидела команда, вставьте токен GitHub в ⚙ Настройках.</div>';
+  }
+  h += "</div>";
+
+  if (conflict) {
+    h += '<div class="toast"><div><b>В репозитории есть версия новее</b><br>'
+      + 'Кто-то сохранил доску, пока вы правили. Выберите, что оставить.</div>'
+      + '<div class="trow"><button class="btn primary" data-overwrite="1">Оставить мои правки</button>'
+      + '<button class="btn ghost" data-takeremote="1">Взять из репозитория</button></div></div>';
+  }
+
+  document.getElementById("root").innerHTML = h;
+  applyZoom();
+  var bw = $(".boardwrap");
+  if (bw) {
+    if (keep) { bw.scrollLeft = keep.l; bw.scrollTop = keep.t; }
+    else bw.scrollTop = bw.scrollHeight;
+  }
+  if (ui.modal) drawModal();
+}
+function applyZoom() { document.documentElement.style.setProperty("--z", LS.get("zoom", 1)); }
+
+/* ============================== экраны входа ============================== */
+function gateShell(inner) {
+  document.getElementById("root").innerHTML =
+    '<div class="gate"><div class="gatebox">'
+    + '<div class="logo">Carpet<i>FALL</i></div>'
+    + '<div class="sub">Дорожная карта разработки</div>' + inner + "</div></div>";
+}
+
+var gateMsg = "", gateErr = "";
+function gatePassword(firstRun) {
+  var isNew = firstRun === true || boardMissing;
+  gateShell(
+    '<div class="lock">' + (isNew ? "🔑" : "🔒") + "</div>"
+    + (gateErr ? '<div class="err">' + esc(gateErr) + "</div>" : "")
+    + (gateMsg ? '<div class="ok">' + esc(gateMsg) + "</div>" : "")
+    + '<p class="note" style="margin-bottom:16px">'
+    + (isNew
+      ? "Доски в репозитории ещё нет. Придумайте кодовую фразу — ею будет зашифровано содержимое."
+      : "Введите кодовую фразу команды<span class=\"caret\">&nbsp;</span>")
+    + "</p>"
+    + '<div class="pwrow"><input class="field" id="pw" type="password" placeholder="кодовая фраза" autocomplete="current-password">'
+    + '<button class="btn primary" data-unlock="1" style="flex:0 0 auto">' + (isNew ? "Создать" : "Открыть") + "</button></div>"
+    + '<p class="hint">Фраза не уходит никуда с этой страницы. В репозитории лежит только зашифрованный текст — без фразы его не прочитать.</p>'
+    + (repoReady() ? "" : '<p class="hint" style="margin-top:12px">Репозиторий не определился по адресу — укажите его вручную после входа, в ⚙ Настройках.</p>')
+  );
+  var f = $("#pw"); if (f) setTimeout(function () { f.focus(); }, 60);
+}
+
+function gateName() {
+  var h = '<p class="note" style="margin-bottom:16px">Кто вы? Ник подставится в исполнителей<span class="caret">&nbsp;</span></p><div class="who-list">';
+  state.members.forEach(function (m) { h += '<button class="btn" data-beme="' + esc(m.id) + '">' + esc(m.name) + "</button>"; });
+  h += '</div><div class="row" style="justify-content:center">'
+    + '<input class="field" id="newme" placeholder="ваш ник" autocomplete="off" style="flex:1 1 200px">'
+    + '<button class="btn primary" data-joinme="1" style="flex:0 0 auto">Войти</button></div>'
+    + '<p class="note" style="margin-top:14px">Можно и просто посмотреть — <button class="btn ghost" data-guest="1">войти гостем</button></p>';
+  gateShell(h);
+  var f = $("#newme"); if (f) setTimeout(function () { f.focus(); }, 60);
+}
+
+/* ============================== окна ============================== */
+function openModal(m) { ui.modal = m; drawModal(); }
+function closeModal() { ui.modal = null; var s = $(".scrim"); if (s) s.remove(); }
+
+function statusPicker(sel) {
+  var h = '<div class="picker">';
+  state.statuses.forEach(function (s) {
+    h += '<button type="button" class="pick" style="--c:' + esc(s.color) + '" data-pickstatus="' + esc(s.id)
+      + '" aria-pressed="' + (s.id === sel ? "true" : "false") + '">' + esc(s.name) + "</button>";
+  });
+  return h + "</div>";
+}
+function memberOptions(sel) {
+  var h = '<option value="">— не назначен —</option>';
+  state.members.forEach(function (m) {
+    h += '<option value="' + esc(m.id) + '"' + (m.id === sel ? " selected" : "") + ">" + esc(m.name) + "</option>";
+  });
+  return h;
+}
+
+function drawModal() {
+  var old = $(".scrim"); if (old) old.remove();
+  var m = ui.modal; if (!m) return;
+  var h = "";
+
+  if (m.type === "task") {
+    var col = byId(state.columns, m.colId); if (!col) { closeModal(); return; }
+    var t = m.taskId ? byId(col.tasks, m.taskId) : null;
+    var isNew = !t;
+    if (!t) t = { id: "", title: "", desc: "", status: (state.statuses[1] || state.statuses[0]).id, assignee: me ? me.id : null, created: Date.now() };
+    var dt = t.created ? new Date(t.created).toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: "numeric" }) : "";
+    h = '<div class="modal" role="dialog" aria-modal="true"><h2>' + (isNew ? "Новый таск" : "Таск") + " · " + esc(col.name)
+      + '<button class="btn ghost x" data-close="1">✕</button></h2><div class="mbody">'
+      + '<div><label class="lbl" for="t-title">Название</label><input class="field" id="t-title" value="' + esc(t.title) + '" placeholder="Что нужно сделать" autocomplete="off"></div>'
+      + '<div><label class="lbl">Статус</label>' + statusPicker(t.status) + "</div>"
+      + '<div class="row"><div><label class="lbl" for="t-who">Исполнитель</label><select class="field" id="t-who">' + memberOptions(t.assignee) + "</select></div>"
+      + '<div><label class="lbl" for="t-col">Раздел</label><select class="field" id="t-col">'
+      + state.columns.map(function (c) { return '<option value="' + esc(c.id) + '"' + (c.id === col.id ? " selected" : "") + ">" + esc(c.name) + "</option>"; }).join("")
+      + "</select></div></div>"
+      + '<div><label class="lbl" for="t-desc">Описание</label><textarea class="field" id="t-desc" placeholder="Детали, ссылки, критерии готовности">' + esc(t.desc || "") + "</textarea></div>"
+      + (isNew ? "" : '<div class="meta">' + esc([t.author ? "создал " + t.author : "", dt].filter(Boolean).join(" · ")) + "</div>")
+      + '</div><div class="mfoot">' + (isNew ? "" : '<button class="btn danger" data-deltask="1">Удалить</button>')
+      + '<div class="spacer"></div><button class="btn" data-close="1">Отмена</button>'
+      + '<button class="btn primary" data-savetask="1">' + (isNew ? "Создать" : "Сохранить") + "</button></div></div>";
+    ui.draft = { status: t.status };
+  }
+
+  if (m.type === "column") {
+    var c = m.colId ? byId(state.columns, m.colId) : null;
+    var isNewC = !c;
+    if (!c) c = { id: "", name: "", status: (state.statuses[1] || state.statuses[0]).id, tasks: [] };
+    h = '<div class="modal" role="dialog" aria-modal="true"><h2>' + (isNewC ? "Новый раздел" : "Раздел")
+      + '<button class="btn ghost x" data-close="1">✕</button></h2><div class="mbody">'
+      + '<div><label class="lbl" for="c-name">Название</label><input class="field" id="c-name" value="' + esc(c.name) + '" placeholder="Например: Мобы" autocomplete="off"></div>'
+      + '<div><label class="lbl">Статус раздела</label>' + statusPicker(c.status) + "</div>"
+      + (isNewC ? "" : '<div><label class="lbl">Порядок</label><div class="picker">'
+        + '<button type="button" class="btn" data-movecol="-1">← левее</button>'
+        + '<button type="button" class="btn" data-movecol="1">правее →</button></div></div>')
+      + '</div><div class="mfoot">' + (isNewC ? "" : '<button class="btn danger" data-delcol="1">Удалить раздел</button>')
+      + '<div class="spacer"></div><button class="btn" data-close="1">Отмена</button>'
+      + '<button class="btn primary" data-savecol="1">' + (isNewC ? "Создать" : "Сохранить") + "</button></div></div>";
+    ui.draft = { status: c.status };
+  }
+
+  if (m.type === "statuses") {
+    h = '<div class="modal wide" role="dialog" aria-modal="true"><h2>Статусы<button class="btn ghost x" data-close="1">✕</button></h2>'
+      + '<div class="mbody"><p class="note">Названия и цвета — ваши. Удалить можно любой статус, кроме последнего; его таски переедут на первый в списке.</p><div class="list">';
+    state.statuses.forEach(function (s) {
+      h += '<div class="listrow">'
+        + '<input type="color" value="' + esc(s.color) + '" data-stcolor="' + esc(s.id) + '" aria-label="Цвет статуса">'
+        + '<input class="field" value="' + esc(s.name) + '" data-stname="' + esc(s.id) + '" aria-label="Название статуса">'
+        + '<button class="btn ghost" data-stmove="' + esc(s.id) + '" data-dir="-1" title="Выше">▲</button>'
+        + '<button class="btn ghost" data-stmove="' + esc(s.id) + '" data-dir="1" title="Ниже">▼</button>'
+        + '<button class="btn danger" data-stdel="' + esc(s.id) + '" title="Удалить">✕</button></div>';
+    });
+    h += '</div><button class="btn" data-addstatus="1">+ Добавить статус</button></div>'
+      + '<div class="mfoot"><div class="spacer"></div><button class="btn primary" data-close="1">Готово</button></div></div>';
+  }
+
+  if (m.type === "team") {
+    h = '<div class="modal" role="dialog" aria-modal="true"><h2>Команда<button class="btn ghost x" data-close="1">✕</button></h2>'
+      + '<div class="mbody"><p class="note">Ники для назначения тасков. Каждый выбирает себя при входе — доска запоминает выбор в его браузере.</p><div class="list">';
+    if (!state.members.length) h += '<div class="note">Пока никого нет.</div>';
+    state.members.forEach(function (mm) {
+      h += '<div class="listrow"><span class="ava" style="background:' + esc(mm.color) + '">' + esc(initials(mm.name)) + "</span>"
+        + '<input class="field" value="' + esc(mm.name) + '" data-mname="' + esc(mm.id) + '" aria-label="Ник">'
+        + '<input type="color" value="' + esc(mm.color) + '" data-mcolor="' + esc(mm.id) + '" aria-label="Цвет">'
+        + '<button class="btn danger" data-mdel="' + esc(mm.id) + '" title="Убрать">✕</button></div>';
+    });
+    h += '</div><div class="row"><input class="field" id="newmember" placeholder="ник" autocomplete="off">'
+      + '<button class="btn primary" data-maddmember="1" style="flex:0 0 auto">Добавить</button></div></div>'
+      + '<div class="mfoot"><div class="spacer"></div><button class="btn primary" data-close="1">Готово</button></div></div>';
+  }
+
+  if (m.type === "me") {
+    h = '<div class="modal" role="dialog" aria-modal="true"><h2>Кто вы<button class="btn ghost x" data-close="1">✕</button></h2>'
+      + '<div class="mbody"><div class="who-list">';
+    state.members.forEach(function (mm) {
+      h += '<button class="btn' + (me && me.id === mm.id ? " primary" : "") + '" data-beme="' + esc(mm.id) + '">' + esc(mm.name) + "</button>";
+    });
+    h += '</div><div class="row"><input class="field" id="newme" placeholder="ваш ник" autocomplete="off">'
+      + '<button class="btn primary" data-joinme="1" style="flex:0 0 auto">Войти</button></div></div>'
+      + '<div class="mfoot"><div class="spacer"></div><button class="btn ghost" data-forgetme="1">Сменить ник</button></div></div>';
+  }
+
+  if (m.type === "settings") {
+    h = '<div class="modal wide" role="dialog" aria-modal="true"><h2>Настройки<button class="btn ghost x" data-close="1">✕</button></h2><div class="mbody">'
+      + '<div><label class="lbl" for="s-token">Токен GitHub</label>'
+      + '<input class="field" id="s-token" type="password" value="' + esc(token) + '" placeholder="github_pat_..." autocomplete="off">'
+      + '<p class="hint">Нужен, только чтобы сохранять правки. Хранится в вашем браузере и никуда больше не отправляется. '
+      + 'Где взять: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → '
+      + 'доступ к этому репозиторию, право <code>Contents: Read and write</code>.</p></div>'
+      + '<div class="row">'
+      + '<div><label class="lbl" for="s-owner">Владелец</label><input class="field" id="s-owner" value="' + esc(CFG.owner) + '" placeholder="username"></div>'
+      + '<div><label class="lbl" for="s-repo">Репозиторий</label><input class="field" id="s-repo" value="' + esc(CFG.repo) + '" placeholder="carpetfall-board"></div>'
+      + "</div><div class=\"row\">"
+      + '<div><label class="lbl" for="s-branch">Ветка</label><input class="field" id="s-branch" value="' + esc(CFG.branch) + '"></div>'
+      + '<div><label class="lbl" for="s-path">Файл с доской</label><input class="field" id="s-path" value="' + esc(CFG.path) + '"></div>'
+      + "</div>"
+      + '<div><label class="lbl">Кодовая фраза</label>'
+      + '<div class="row"><input class="field" id="s-pw1" type="password" placeholder="новая фраза" autocomplete="new-password">'
+      + '<input class="field" id="s-pw2" type="password" placeholder="ещё раз" autocomplete="new-password">'
+      + '<button class="btn" data-changepw="1" style="flex:0 0 auto">Сменить</button></div>'
+      + '<p class="hint">Доска перешифруется и сохранится. Старая фраза перестанет подходить — раздайте новую команде.</p></div>'
+      + '<div><label class="lbl">Без токена</label>'
+      + '<button class="btn" data-download="1">Скачать data.json</button>'
+      + '<p class="hint">Запасной путь: скачать зашифрованный файл и загрузить его в репозиторий вручную — '
+      + 'на странице репозитория <code>Add file → Upload files</code>, перетащить, <code>Commit changes</code>.</p></div>'
+      + '</div><div class="mfoot"><button class="btn danger" data-forget="1">Забыть токен</button>'
+      + '<div class="spacer"></div><button class="btn primary" data-savesettings="1">Сохранить</button></div></div>';
+  }
+
+  var scrim = document.createElement("div");
+  scrim.className = "scrim";
+  scrim.innerHTML = h;
+  document.getElementById("root").appendChild(scrim);
+  var f = scrim.querySelector("input.field,textarea.field");
+  if (f) setTimeout(function () { f.focus(); if (f.setSelectionRange && f.value) f.setSelectionRange(f.value.length, f.value.length); }, 20);
+}
+
+/* ============================== события ============================== */
+var PAL = ["#3ac96a", "#b0a45c", "#5ec8b0", "#c98b3a", "#8fb04a", "#4a9bd1", "#b0648a", "#9a7ad1"];
+var suppressClick = false;
+
+function addMember(name) {
+  name = String(name || "").trim().slice(0, 32);
+  if (!name) return null;
+  var ex = null;
+  state.members.forEach(function (m) { if (m.name.toLowerCase() === name.toLowerCase()) ex = m; });
+  if (ex) return ex;
+  var m = { id: uid(), name: name, color: PAL[state.members.length % PAL.length] };
+  state.members.push(m);
+  markDirty();
+  return m;
+}
+function setMe(m) { me = m; LS.set("me", m); }
+function findTask(id) {
+  for (var i = 0; i < state.columns.length; i++) {
+    var c = state.columns[i];
+    for (var j = 0; j < c.tasks.length; j++) if (c.tasks[j].id === id) return { col: c, task: c.tasks[j], i: j };
+  }
+  return null;
+}
+function moveTask(taskId, toColId, index) {
+  var f = findTask(taskId); if (!f) return;
+  var to = byId(state.columns, toColId); if (!to) return;
+  f.col.tasks.splice(f.i, 1);
+  if (index == null || index < 0 || index > to.tasks.length) index = to.tasks.length;
+  to.tasks.splice(index, 0, f.task);
+  markDirty(); render();
+}
+
+document.addEventListener("click", function (e) {
+  var el;
+  if (suppressClick) { suppressClick = false; return; }
+  if (!e.target || !e.target.closest) return;
+
+  /* --- вход --- */
+  if (e.target.closest("[data-unlock]")) { unlock(); return; }
+  if ((el = e.target.closest("[data-beme]"))) {
+    var mem = byId(state.members, el.getAttribute("data-beme"));
+    if (mem) { setMe({ id: mem.id, name: mem.name, color: mem.color }); closeModal(); render(); }
+    return;
+  }
+  if (e.target.closest("[data-joinme]")) {
+    var box = $("#newme");
+    var mem2 = addMember(box ? box.value : "");
+    if (mem2) { setMe({ id: mem2.id, name: mem2.name, color: mem2.color }); closeModal(); render(); }
+    else if (box) box.focus();
+    return;
+  }
+  if (e.target.closest("[data-guest]")) { setMe({ id: null, name: "Гость", color: "#66786c" }); render(); return; }
+  if (e.target.closest("[data-forgetme]")) { setMe(null); closeModal(); render(); return; }
+
+  if (e.target.classList && e.target.classList.contains("scrim")) { closeModal(); return; }
+  if (e.target.closest("[data-close]")) { closeModal(); return; }
+
+  /* --- конфликт версий --- */
+  if (e.target.closest("[data-overwrite]")) { conflict = false; fileSha = null; render(); save(true); return; }
+  if (e.target.closest("[data-takeremote]")) { conflict = false; dirty = false; lastText = null; refresh(); render(); return; }
+
+  /* --- панель --- */
+  if ((el = e.target.closest("[data-open]"))) { openModal({ type: el.getAttribute("data-open") }); return; }
+  if (e.target.closest("[data-savenow]")) { save(true); return; }
+  if (e.target.closest("[data-refresh]")) { lastText = null; refresh(); return; }
+  if ((el = e.target.closest("[data-tog]"))) {
+    var sid = el.getAttribute("data-tog");
+    if (ui.hidden[sid]) delete ui.hidden[sid]; else ui.hidden[sid] = true;
+    render(); return;
+  }
+  if (e.target.closest("[data-mine]")) { ui.onlyMine = !ui.onlyMine; render(); return; }
+  if ((el = e.target.closest("[data-zoom]"))) {
+    var z = Math.min(1.45, Math.max(0.72, LS.get("zoom", 1) + (+el.getAttribute("data-zoom")) * 0.12));
+    LS.set("zoom", z); applyZoom(); return;
+  }
+  if ((el = e.target.closest("[data-fold]"))) {
+    ui.folded = {};
+    if (el.getAttribute("data-fold") === "all") state.columns.forEach(function (c) { ui.folded[c.id] = true; });
+    LS.set("folded", ui.folded); render(); return;
+  }
+
+  /* --- доска --- */
+  if ((el = e.target.closest("[data-addcard]"))) { openModal({ type: "task", colId: el.getAttribute("data-addcard") }); return; }
+  if ((el = e.target.closest(".tile.base"))) {
+    var cid = el.getAttribute("data-col");
+    if (ui.folded[cid]) delete ui.folded[cid]; else ui.folded[cid] = true;
+    LS.set("folded", ui.folded); render(); return;
+  }
+  if ((el = e.target.closest(".tile.card"))) {
+    var tid = el.getAttribute("data-task");
+    if (e.target.getAttribute && e.target.getAttribute("data-x") === "1") {
+      if (ui.opened[tid]) delete ui.opened[tid]; else ui.opened[tid] = true;
+      render(); return;
+    }
+    openModal({ type: "task", colId: el.getAttribute("data-col"), taskId: tid });
+    return;
+  }
+  if ((el = e.target.closest("[data-pickstatus]"))) {
+    ui.draft.status = el.getAttribute("data-pickstatus");
+    Array.prototype.forEach.call(el.parentNode.querySelectorAll("[data-pickstatus]"), function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-pickstatus") === ui.draft.status ? "true" : "false");
+    });
+    return;
+  }
+
+  /* --- таски --- */
+  if (e.target.closest("[data-savetask]")) {
+    var m = ui.modal, col = byId(state.columns, m.colId);
+    var title = $("#t-title").value.trim();
+    if (!title) { $("#t-title").focus(); return; }
+    var desc = $("#t-desc").value, who = $("#t-who").value || null, destId = $("#t-col").value;
+    var t = m.taskId ? byId(col.tasks, m.taskId) : null;
+    if (t) {
+      t.title = title; t.desc = desc; t.status = ui.draft.status; t.assignee = who;
+      if (destId !== col.id) {
+        col.tasks.splice(col.tasks.indexOf(t), 1);
+        var dest = byId(state.columns, destId);
+        (dest || col).tasks.push(t);
+      }
+    } else {
+      var dest2 = byId(state.columns, destId) || col;
+      dest2.tasks.push({ id: uid(), title: title, desc: desc, status: ui.draft.status, assignee: who, author: me ? me.name : null, created: Date.now() });
+    }
+    closeModal(); markDirty(); render(); return;
+  }
+  if (e.target.closest("[data-deltask]")) {
+    var mm = ui.modal, c2 = byId(state.columns, mm.colId), t2 = c2 && byId(c2.tasks, mm.taskId);
+    if (t2 && confirm("Удалить таск «" + t2.title + "»?")) {
+      c2.tasks.splice(c2.tasks.indexOf(t2), 1);
+      closeModal(); markDirty(); render();
+    }
+    return;
+  }
+
+  /* --- разделы --- */
+  if (e.target.closest("[data-savecol]")) {
+    var mc = ui.modal, nm = $("#c-name").value.trim();
+    if (!nm) { $("#c-name").focus(); return; }
+    if (mc.colId) { var cc = byId(state.columns, mc.colId); cc.name = nm; cc.status = ui.draft.status; }
+    else state.columns.push({ id: uid(), name: nm, status: ui.draft.status, tasks: [] });
+    closeModal(); markDirty(); render(); return;
+  }
+  if (e.target.closest("[data-delcol]")) {
+    var c3 = byId(state.columns, ui.modal.colId);
+    if (c3 && confirm("Удалить раздел «" + c3.name + "» и все " + c3.tasks.length + " тасков в нём?")) {
+      state.columns.splice(state.columns.indexOf(c3), 1);
+      closeModal(); markDirty(); render();
+    }
+    return;
+  }
+  if ((el = e.target.closest("[data-movecol]"))) {
+    var c4 = byId(state.columns, ui.modal.colId);
+    var i4 = state.columns.indexOf(c4), j4 = i4 + (+el.getAttribute("data-movecol"));
+    if (j4 >= 0 && j4 < state.columns.length) {
+      state.columns.splice(i4, 1); state.columns.splice(j4, 0, c4);
+      markDirty(); render(); drawModal();
+    }
+    return;
+  }
+
+  /* --- статусы --- */
+  if (e.target.closest("[data-addstatus]")) {
+    state.statuses.push({ id: uid(), name: "Новый статус", color: PAL[state.statuses.length % PAL.length] });
+    markDirty(); render(); drawModal(); return;
+  }
+  if ((el = e.target.closest("[data-stdel]"))) {
+    if (state.statuses.length < 2) return;
+    var sid2 = el.getAttribute("data-stdel");
+    state.statuses = state.statuses.filter(function (s) { return s.id !== sid2; });
+    var first = state.statuses[0].id;
+    state.columns.forEach(function (c) {
+      if (c.status === sid2) c.status = first;
+      c.tasks.forEach(function (t) { if (t.status === sid2) t.status = first; });
+    });
+    delete ui.hidden[sid2];
+    markDirty(); render(); drawModal(); return;
+  }
+  if ((el = e.target.closest("[data-stmove]"))) {
+    var s3 = byId(state.statuses, el.getAttribute("data-stmove"));
+    var i3 = state.statuses.indexOf(s3), j3 = i3 + (+el.getAttribute("data-dir"));
+    if (j3 >= 0 && j3 < state.statuses.length) {
+      state.statuses.splice(i3, 1); state.statuses.splice(j3, 0, s3);
+      markDirty(); render(); drawModal();
+    }
+    return;
+  }
+
+  /* --- команда --- */
+  if (e.target.closest("[data-maddmember]")) {
+    var inp = $("#newmember");
+    if (addMember(inp.value)) { inp.value = ""; render(); drawModal(); }
+    return;
+  }
+  if ((el = e.target.closest("[data-mdel]"))) {
+    var mid = el.getAttribute("data-mdel");
+    state.members = state.members.filter(function (x) { return x.id !== mid; });
+    state.columns.forEach(function (c) { c.tasks.forEach(function (t) { if (t.assignee === mid) t.assignee = null; }); });
+    if (me && me.id === mid) setMe(null);
+    markDirty(); render(); drawModal(); return;
+  }
+
+  /* --- настройки --- */
+  if (e.target.closest("[data-savesettings]")) {
+    token = $("#s-token").value.trim(); LS.set("token", token);
+    CFG.owner = $("#s-owner").value.trim();
+    CFG.repo = $("#s-repo").value.trim();
+    CFG.branch = $("#s-branch").value.trim() || "main";
+    CFG.path = $("#s-path").value.trim() || "data.json";
+    saveCFG(); closeModal();
+    lastText = null;
+    refresh(true);
+    render();
+    if (dirty && token) save(true);
+    return;
+  }
+  if (e.target.closest("[data-download]")) {
+    encryptBoard(state, pass).then(function (text) {
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+      a.download = (CFG.path || "data.json").split("/").pop();
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    });
+    return;
+  }
+  if (e.target.closest("[data-forget]")) {
+    token = ""; LS.del("token"); closeModal(); render(); return;
+  }
+  if (e.target.closest("[data-changepw]")) {
+    var p1 = $("#s-pw1").value, p2 = $("#s-pw2").value;
+    if (!p1 || p1.length < 4) { alert("Фраза слишком короткая — хотя бы 4 символа."); return; }
+    if (p1 !== p2) { alert("Фразы не совпадают."); return; }
+    pass = p1; closeModal(); markDirty(); save(true);
+    alert("Фраза изменена. Раздайте новую команде — старая больше не подойдёт.");
+    return;
+  }
+});
+
+document.addEventListener("dblclick", function (e) {
+  if (!e.target || !e.target.closest || !state) return;
+  var el = e.target.closest(".tile.base");
+  if (el) openModal({ type: "column", colId: el.getAttribute("data-col") });
+});
+
+document.addEventListener("input", function (e) {
+  if (e.target.id === "q") {
+    ui.q = e.target.value;
+    clearTimeout(ui._qt);
+    ui._qt = setTimeout(function () {
+      render();
+      var q = $("#q"); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+    }, 160);
+  }
+});
+
+document.addEventListener("change", function (e) {
+  var el = e.target, id;
+  if ((id = el.getAttribute("data-stname"))) { var s = byId(state.statuses, id); if (s) { s.name = el.value.trim() || s.name; markDirty(); render(); drawModal(); } }
+  else if ((id = el.getAttribute("data-stcolor"))) { var s2 = byId(state.statuses, id); if (s2) { s2.color = el.value; markDirty(); render(); drawModal(); } }
+  else if ((id = el.getAttribute("data-mname"))) { var m = byId(state.members, id); if (m) { m.name = el.value.trim() || m.name; if (me && me.id === id) setMe({ id: m.id, name: m.name, color: m.color }); markDirty(); render(); drawModal(); } }
+  else if ((id = el.getAttribute("data-mcolor"))) { var m2 = byId(state.members, id); if (m2) { m2.color = el.value; if (me && me.id === id) setMe({ id: m2.id, name: m2.name, color: m2.color }); markDirty(); render(); drawModal(); } }
+});
+
+document.addEventListener("keydown", function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(true); return; }
+  if (e.key === "Escape") { if ($(".scrim")) closeModal(); return; }
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("tile")) {
+    e.preventDefault(); e.target.click(); return;
+  }
+  if (e.key === "Enter") {
+    if (e.target.id === "pw") { e.preventDefault(); unlock(); }
+    else if (e.target.id === "t-title" || e.target.id === "c-name") {
+      e.preventDefault();
+      var b = $(".scrim [data-savetask]") || $(".scrim [data-savecol]"); if (b) b.click();
+    } else if (e.target.id === "newme") { e.preventDefault(); var b2 = document.querySelector("[data-joinme]"); if (b2) b2.click(); }
+    else if (e.target.id === "newmember") { e.preventDefault(); var b3 = $(".scrim [data-maddmember]"); if (b3) b3.click(); }
+  }
+});
+
+window.addEventListener("beforeunload", function (e) {
+  if (dirty && token) { e.preventDefault(); e.returnValue = ""; }
+});
+
+/* ============================== перетаскивание ============================== */
+var drag = null;
+function endDrag() {
+  if (!drag) return;
+  if (drag.ghost) drag.ghost.remove();
+  if (drag.el) drag.el.classList.remove("dragging");
+  Array.prototype.forEach.call(document.querySelectorAll(".col.dragover"), function (n) { n.classList.remove("dragover"); });
+  document.body.classList.remove("dnd");
+  document.body.style.userSelect = "";
+  drag = null;
+}
+document.addEventListener("pointerdown", function (e) {
+  if (e.button !== 0 || e.pointerType === "touch" || !state) return;
+  if (!e.target || !e.target.closest) return;
+  var card = e.target.closest(".tile.card");
+  if (!card) return;
+  drag = { id: card.getAttribute("data-task"), el: card, x0: e.clientX, y0: e.clientY, started: false, col: null };
+});
+document.addEventListener("pointermove", function (e) {
+  if (!drag) return;
+  if (!drag.started) {
+    if (Math.abs(e.clientX - drag.x0) + Math.abs(e.clientY - drag.y0) < 6) return;
+    drag.started = true;
+    var r = drag.el.getBoundingClientRect();
+    var g = document.createElement("div");
+    g.className = "tile card drag-ghost";
+    g.style.width = r.width + "px";
+    g.style.setProperty("--c", getComputedStyle(drag.el).getPropertyValue("--c").trim() || "#3af080");
+    var ttl = drag.el.querySelector(".ttl");
+    g.textContent = ttl ? ttl.textContent : drag.el.textContent;
+    document.body.appendChild(g);
+    drag.ghost = g; drag.ox = r.width / 2; drag.oy = r.height / 2;
+    drag.el.classList.add("dragging");
+    document.body.classList.add("dnd");
+    document.body.style.userSelect = "none";
+  }
+  e.preventDefault();
+  drag.ghost.style.transform = "translate(" + (e.clientX - drag.ox) + "px," + (e.clientY - drag.oy) + "px)";
+  drag.ghost.style.visibility = "hidden";
+  var under = document.elementFromPoint(e.clientX, e.clientY);
+  drag.ghost.style.visibility = "";
+  var col = (under && under.closest) ? under.closest(".col") : null;
+  if (col !== drag.col) {
+    Array.prototype.forEach.call(document.querySelectorAll(".col.dragover"), function (n) { n.classList.remove("dragover"); });
+    if (col) col.classList.add("dragover");
+    drag.col = col;
+  }
+  var bw = $(".boardwrap");
+  if (bw) {
+    var br = bw.getBoundingClientRect();
+    if (e.clientX > br.right - 70) bw.scrollLeft += 18;
+    else if (e.clientX < br.left + 70) bw.scrollLeft -= 18;
+  }
+}, { passive: false });
+document.addEventListener("pointerup", function (e) {
+  if (!drag) return;
+  var d = drag;
+  if (!d.started) { endDrag(); return; }
+  suppressClick = true; setTimeout(function () { suppressClick = false; }, 0);
+  var col = d.col;
+  if (!col) { endDrag(); return; }
+  var colId = col.getAttribute("data-colwrap");
+  var target = byId(state.columns, colId);
+  if (!target) { endDrag(); return; }
+  var cards = Array.prototype.slice.call(col.querySelectorAll(".tile.card")).filter(function (c) { return c !== d.el; });
+  var below = cards.filter(function (cd) {
+    var r = cd.getBoundingClientRect();
+    return (r.top + r.height / 2) >= e.clientY;
+  });
+  var idx = 0;
+  if (below.length) {
+    var lastId = below[below.length - 1].getAttribute("data-task");
+    for (var k = 0; k < target.tasks.length; k++) if (target.tasks[k].id === lastId) { idx = k + 1; break; }
+  }
+  var f = findTask(d.id);
+  if (f && f.col.id === colId && f.i < idx) idx--;
+  endDrag();
+  moveTask(d.id, colId, idx);
+});
+document.addEventListener("pointercancel", endDrag);
+window.addEventListener("blur", endDrag);
+
+/* ============================== запуск ============================== */
+var boardMissing = false, remoteText = null;
+
+function unlock() {
+  var f = $("#pw");
+  var p = f ? f.value : "";
+  if (!p) { if (f) f.focus(); return; }
+  gateErr = "";
+  if (boardMissing) {
+    if (p.length < 4) { gateErr = "Фраза слишком короткая — хотя бы 4 символа."; gatePassword(); return; }
+    pass = p;
+    state = seed();
+    dirty = true;
+    render();
+    if (token) save(true);
+    return;
+  }
+  decryptBoard(remoteText, p).then(function (b) {
+    pass = p; state = b; lastText = remoteText;
+    if (!state.members) state.members = [];
+    gateErr = ""; render();
+    setInterval(function () { if (!dirty && !ui.modal) refresh(true); }, 180000);
+  }).catch(function () {
+    gateErr = "Фраза не подошла. Проверьте раскладку и регистр.";
+    gatePassword();
+  });
+}
+
+if (!window.crypto || !crypto.subtle) {
+  document.getElementById("root").innerHTML =
+    '<div class="gate"><div class="gatebox"><div class="logo">Carpet<i>FALL</i></div>'
+    + '<p class="note">Шифрование недоступно: страницу нужно открывать по https (GitHub Pages) '
+    + 'или через localhost. Открытый напрямую файл с диска браузер считает небезопасным.</p></div></div>';
+} else {
+  gateShell('<p class="note">Загрузка…<span class="caret">&nbsp;</span></p>');
+  loadRemote().then(function (r) {
+    if (r.missing || !r.text) { boardMissing = true; gatePassword(true); return; }
+    remoteText = r.text; fileSha = r.sha;
+    gatePassword();
+  }).catch(function () { boardMissing = true; gatePassword(true); });
+}
+})();
+</script>
+</body>
+</html>
